@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!--MyBatis3/MyBatis3Simple-->
+    <context id="DB2Tables" targetRuntime="MyBatis3Simple">
+
+        <commentGenerator>
+            <!--配置不添加任何注释-->
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
+        <!--配置数据库连接信息-->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/atcrowdfunding?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=Hongkong&amp;nullCatalogMeansCurrent=true"
+                        userId="root"
+                        password="root">
+        </jdbcConnection>
+        <!--atcrowdfunding是否将数据库的浮点类型强制转换为java中的BigDecimal类型-->
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+        <!--指定javaBean生成位置-->
+        <javaModelGenerator targetPackage="com.zsr.bean"
+                            targetProject="atcrowdfunding-bean\src\main\java">
+            <property name="enableSubPackages" value="false" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+        <!--指定sql映射文件生成位置-->
+        <sqlMapGenerator targetPackage="mybatis"
+                         targetProject="atcrowdfunding-manager-api\src\main\resources">
+            <property name="enableSubPackages" value="false" />
+        </sqlMapGenerator>
+        <!--指定dao接口生成位置-->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.zsr.manager.dao"
+                             targetProject="atcrowdfunding-manager-api\src\main\java">
+            <property name="enableSubPackages" value="false" />
+        </javaClientGenerator>
+        <!--指定每个表的生成策略-->
+        <table tableName="t_account_type_cert" domainObjectName="AccountTypeCert"/>
+        <table tableName="t_advertisement" domainObjectName="Advertisement" />
+        <table tableName="t_cert" domainObjectName="Cert"/>
+        <table tableName="t_dictionary" domainObjectName="Dictionary"/>
+        <table tableName="t_member" domainObjectName="Member" />
+        <table tableName="t_member_address" domainObjectName="MemberAddress"/>
+        <table tableName="t_member_cert" domainObjectName="MemberCert"/>
+        <table tableName="t_member_project_follow" domainObjectName="MemberProjectFollow"/>
+        <table tableName="t_message" domainObjectName="Message"/>
+        <table tableName="t_order" domainObjectName="Order"/>
+        <table tableName="t_param"  domainObjectName="Param"/>
+        <table tableName="t_permission" domainObjectName="Permission"/>
+        <table tableName="t_project" domainObjectName="Project"/>
+        <table tableName="t_project_tag" domainObjectName="ProjectTag"/>
+        <table tableName="t_project_type" domainObjectName="ProjectType"/>
+        <table tableName="t_return" domainObjectName="Return"/>
+        <table tableName="t_role" domainObjectName="Role"/>
+        <table tableName="t_role_permission" domainObjectName ="RolePermission"/>
+        <table tableName="t_tag" domainObjectName="Tag"/>
+        <table tableName="t_type" domainObjectName="Type"/>
+        <table tableName="t_user" domainObjectName="User"/>
+        <table tableName="t_user_role" domainObjectName="UserRole"/>
+
+    </context>
+</generatorConfiguration>
