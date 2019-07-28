@@ -3,6 +3,7 @@ package com.zsr.controller;
 import com.zsr.bean.User;
 import com.zsr.manager.service.UserService;
 import com.zsr.utils.Const;
+import com.zsr.utils.MD5Util;
 import com.zsr.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,6 +52,15 @@ public class DispatchController {
     /**
      * 跳转到注册页面，main.jsp
      */
+    @RequestMapping("/doLogout")
+    public String doLogout(HttpSession session){
+        session.invalidate();
+        return "redirect:/index.htm";
+    }
+
+    /**
+     * 登陆成功条撞到管理主页面，main.jsp
+     */
     @RequestMapping("/main")
     public String toMainHtml(){
         return "main";
@@ -78,7 +88,7 @@ public class DispatchController {
         try {
             HashMap<String, Object> paramMap = new HashMap<>(5);
             paramMap.put("loginacct",loginacct);
-            paramMap.put("userpswd",userpswd);
+            paramMap.put("userpswd", MD5Util.digest(userpswd));
             paramMap.put("usertype",usertype);
             User user = userService.queryUserLogin(paramMap);
             session.setAttribute(Const.LOGIN_USER,user);
