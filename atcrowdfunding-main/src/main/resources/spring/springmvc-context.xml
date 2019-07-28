@@ -14,7 +14,9 @@
 
     <!-- 启用注解功能 -->
     <context:annotation-config />
-    
+
+    <mvc:annotation-driven/>
+    <mvc:default-servlet-handler/>
     <!-- 字符串字符编码转换 -->
     <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" >
         <property name="messageConverters">
@@ -23,10 +25,10 @@
 	                <property name="supportedMediaTypes">
 	                      <list>
 	                          <value>application/json;charset=UTF-8</value>
-	                     </list>   
-	                </property>   
-	             </bean>   
-	         </list>   
+	                     </list>
+	                </property>
+	             </bean>
+	         </list>
 	    </property>
     </bean>-->
 
