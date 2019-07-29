@@ -59,6 +59,7 @@
 </div>
 <script src="${APP_PATH}/jquery/jquery-2.1.1.min.js"></script>
 <script src="${APP_PATH}/bootstrap/js/bootstrap.min.js"></script>
+<script src="${APP_PATH}/jquery/layer/layer.js"></script>
 <script>
     <%--同步请求--%>
     /*function dologin() {
@@ -72,18 +73,23 @@
         var usertype = $("#fusertype");
 
         if ($.trim(loginacct.val())==""){
-            $("#formTip").text("用户名不能为空，请重新输入！");
-            loginacct.val("");
-            loginacct.focus();
+            // $("#formTip").text("用户名不能为空，请重新输入！");
+            layer.msg("用户名不能为空，请重新输入！",{icon:2,shift:6},function () {
+                loginacct.val("");
+                loginacct.focus();
+            });
             return false;
         }
 
         if ($.trim(userpswd.val())==""){
-            $("#formTip").text("密码不能为空，请重新输入！");
-            userpswd.val("");
-            userpswd.focus();
+            // $("#formTip").text("密码不能为空，请重新输入！");
+            layer.msg("密码不能为空，请重新输入！",{icon:2,shift:6},function () {
+                userpswd.val("");
+                userpswd.focus();
+            });
             return false;
         }
+        var loadingIndex;
         $.ajax({
             url:"${APP_PATH}/doLogin.do",
             data:{
@@ -93,14 +99,17 @@
             },
             type:"post",
             beforeSend:function () {
+                loadingIndex = layer.msg('登录中', {icon: 16});
               //一般用于表单验证
               return true;
             },
             success:function (result) {
+                layer.close(loadingIndex);
                 if (result.code==100) {
                     window.location.href="${APP_PATH}/main.htm";
                 }else {
-                    $("#formTip").text("用户名或密码错误！");
+                    // $("#formTip").text("用户名或密码错误！");
+                    layer.msg("用户名或密码错误！",{icon:5,shift:6});
                 }
             },
             error:function () {
