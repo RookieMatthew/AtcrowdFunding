@@ -3,6 +3,7 @@ package com.zsr.manager.service;
 import com.zsr.bean.User;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Demo class
@@ -17,4 +18,8 @@ public interface UserService {
      * @return 返回查询到的用户
      * */
     User queryUserLogin(HashMap<String, Object> paramMap);
+
+    List<User> getUsers();
+
+    void addUser(User user);
 }

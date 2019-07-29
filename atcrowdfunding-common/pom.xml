@@ -22,6 +22,11 @@
    </parent>
 
     <dependencies>
+        <!--分页插件-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+        </dependency>
         <!--mybatis逆向工程-->
         <dependency>
             <groupId>org.mybatis.generator</groupId>
