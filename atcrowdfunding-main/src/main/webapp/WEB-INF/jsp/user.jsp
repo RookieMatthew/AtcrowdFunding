@@ -157,7 +157,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                                <c:forEach items="${pageInfo.list}" var="user" varStatus="status">
+                                <%--<c:forEach items="${pageInfo.list}" var="user" varStatus="status">
                                     <tr>
                                         <td>${status.count}</td>
                                         <td><input type="checkbox"></td>
@@ -170,13 +170,13 @@
                                             <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
                                         </td>
                                     </tr>
-                                </c:forEach>
+                                </c:forEach>--%>
                             </tbody>
                             <tfoot>
                                 <tr >
                                     <td colspan="6" align="center">
                                         <ul class="pagination">
-                                            <c:if test="${pageInfo.hasPreviousPage}">
+                                            <%--<c:if test="${pageInfo.hasPreviousPage}">
                                                 <li><a href="${APP_PATH}/users.do?pn=1">首页</a></li>
                                                 <li><a href="${APP_PATH}/users.do?pn=${pageInfo.pageNum-1}">上一页</a></li>
                                             </c:if>
@@ -199,7 +199,7 @@
                                             <c:if test="${!pageInfo.hasNextPage}">
                                                 <li class="disabled" ><a href="#">下一页</a></li>
                                                 <li class="disabled" ><a href="#">末页</a></li>
-                                            </c:if>
+                                            </c:if>--%>
                                         </ul>
                                     </td>
                                 </tr>
@@ -215,6 +215,7 @@
 <script src="${APP_PATH}/jquery/jquery-2.1.1.min.js"></script>
 <script src="${APP_PATH}/bootstrap/js/bootstrap.min.js"></script>
 <script src="${APP_PATH}/script/docs.min.js"></script>
+<script src="${APP_PATH}/jquery/layer/layer.js"></script>
 <script type="text/javascript">
     $(function () {
         $(".list-group-item").click(function(){
@@ -234,6 +235,80 @@
     $("tbody .btn-primary").click(function(){
         window.location.href = "edit.html";
     });
+
+    //首次加载用户信息
+    $(loadUser(1));
+    //异步加载用户信息
+    function loadUser(pn) {
+        var listLoading;
+        $.ajax({
+            url:"${APP_PATH}/users.do",
+            data:"pn="+pn,
+            type:"post",
+            beforeSend:function(){
+                listLoading = layer.load(2, {time: 10*1000});
+            },
+            success:function (result) {
+                layer.close(listLoading);
+                if (result.code==100){
+                    parseJsonToUserList(result);
+                    parseJsonToPage(result);
+                } else{
+                    layer.msg(result.message,{icon:0,shift:6});
+                }
+            },
+            error:function () {
+                layer.msg("请求错误！",{icon:0,shift:6});
+            }
+        });
+    }
+    //将服务器返回的json数据中的user信息转换为html格式的数据进行显示
+    function parseJsonToUserList(result) {
+        var userListHtml = "";
+        var userList = result.info.pageInfo.list;
+        $.each(userList,function (i,user) {
+            userListHtml+='<tr>';
+            userListHtml+='<td>'+(i+1)+'</td>';
+            userListHtml+='<td><input type="checkbox"></td>';
+            userListHtml+='<td>'+user.loginacct+'</td>';
+            userListHtml+='<td>'+user.username+'</td>';
+            userListHtml+='<td>'+user.email+'</td>';
+            userListHtml+='<td>';
+            userListHtml+='<button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>';
+            userListHtml+='<button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>';
+            userListHtml+='<button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
+            userListHtml+='</td>';
+            userListHtml+='</tr>';
+        });
+        $("tbody").html(userListHtml);
+    }
+    //将服务器返回的json数据中的分页信息转换为html格式的数据进行显示
+    function parseJsonToPage(result) {
+        var pageHtml = "";
+        var pageInfo = result.info.pageInfo;
+        if(pageInfo.hasPreviousPage){
+            pageHtml+='<li><a href="javascript:loadUser(1)">首页</a></li>';
+            pageHtml+='<li><a href="javascript:loadUser('+(pageInfo.pageNum-1)+')">上一页</a></li>';
+        }else{
+            pageHtml+='<li class="disabled"><a href="#">首页</a></li>';
+            pageHtml+='<li class="disabled"><a href="#">上一页</a></li>';
+        }
+        $.each(pageInfo.navigatepageNums,function (i,pn) {
+            if(pageInfo.pageNum==pn){
+                pageHtml+='<li class="active"><a href="javascript:loadUser('+pn+')">'+pn+'</a></li>';
+            }else{
+                pageHtml+='<li><a href="javascript:loadUser('+pn+')">'+pn+'</a></li>';
+            }
+        });
+        if(pageInfo.hasNextPage){
+            pageHtml+='<li><a href="javascript:loadUser('+(pageInfo.pageNum+1)+')">下一页</a></li>';
+            pageHtml+='<li><a href="javascript:loadUser('+(pageInfo.pages)+')">末页</a></li>';
+        } else{
+            pageHtml+='<li class="disabled" ><a href="#">下一页</a></li>';
+            pageHtml+='<li class="disabled" ><a href="#">末页</a></li>';
+        }
+        $(".pagination").html(pageHtml);
+    }
 </script>
 </body>
 </html>

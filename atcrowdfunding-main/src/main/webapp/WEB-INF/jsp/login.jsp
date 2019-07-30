@@ -113,7 +113,8 @@
                 }
             },
             error:function () {
-              alert("error");
+              // alert("error");
+                layer.msg("请求错误！",{icon:0,shift:6});
             }
         });
     }
