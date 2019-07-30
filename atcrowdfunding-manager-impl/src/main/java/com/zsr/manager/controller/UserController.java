@@ -9,6 +9,7 @@ import com.zsr.manager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -42,12 +43,10 @@ public class UserController {
     /**
      * 异步步请求，以json形式返回user信息
      */
-    @RequestMapping("/users")
+    @RequestMapping(value = "/users",method = RequestMethod.GET)
     @ResponseBody
     public Message userList(@RequestParam(value = "pn",defaultValue = "1") Integer pn,
                             @RequestParam(value = "selectCondition",defaultValue = "") String selectCondition){
-        System.out.println("pn="+pn);
-        System.out.println("selectCondition="+selectCondition);
         List<User> users;
         try {
             PageHelper.startPage(pn,15);
@@ -65,6 +64,32 @@ public class UserController {
     }
 
 
+    /**
+     * 仅用于跳转到user.jsp
+     * */
+    @RequestMapping("/toAddPage")
+    public String toAddPage(HttpSession session){
+        User user = (User) session.getAttribute(Const.LOGIN_USER);
+        if (user==null){
+            return "redirect:/login.htm";
+        }
+        return "add";
+    }
+
+    /**
+     * 接收用户添加请求，进行用户添加
+     */
+    @RequestMapping(value = "/user",method = RequestMethod.POST)
+    @ResponseBody
+    public Message addUser(User user){
+        try {
+            userService.addUser(user);
+            return Message.success("用户添加成功！");
+        }catch (Exception e){
+            e.printStackTrace();
+            return Message.fail("用户添加失败！");
+        }
+    }
     /**
      * 同步请求，携带user信息返回到user.jsp页面
      */

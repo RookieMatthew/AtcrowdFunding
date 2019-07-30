@@ -38,6 +38,7 @@
   <select id="selectAll" resultMap="BaseResultMap">
     select id, loginacct, username, email, createtime
     from t_user
+    order by createtime
   </select>
   <select id="queryUserLogin" parameterType="Map" resultMap="BaseResultMap">
     select id, loginacct, userpswd, username, email, createtime
@@ -53,5 +54,7 @@
         loginacct like concat('%',#{_parameter},'%')
       </if>
     </where>
+    order by createtime
   </select>
+
 </mapper>

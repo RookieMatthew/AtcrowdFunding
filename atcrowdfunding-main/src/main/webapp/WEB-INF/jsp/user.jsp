@@ -141,7 +141,7 @@
                         <button id="selectConditionBtn" type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
                     </form>
                     <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
-                    <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='add.html'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
+                    <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='${APP_PATH}/toAddPage.htm'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
                     <br>
                     <hr style="clear:both;">
                     <div class="table-responsive">
@@ -250,7 +250,7 @@
         $.ajax({
             url:"${APP_PATH}/users.do",
             data:jsonDataObj,
-            type:"post",
+            type:"get",
             beforeSend:function(){
                 listLoading = layer.load(2, {time: 10*1000});
             },

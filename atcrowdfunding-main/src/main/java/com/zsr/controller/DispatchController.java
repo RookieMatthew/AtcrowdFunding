@@ -99,7 +99,6 @@ public class DispatchController {
         }catch (Exception e){
             return Message.fail("登陆失败！");
         }
-        System.out.println("成功");
         return Message.success("登陆成功！");
     }
 

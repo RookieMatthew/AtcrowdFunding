@@ -23,6 +23,7 @@ public interface UserService {
      * @return 返回所有信息的集合
      * */
     List<User> getUsers();
+
     /**
      * 添加一个员工
      * @param user 要添加的员工信息
