@@ -8,6 +8,7 @@ import java.util.Map;
  * @author ACER
  */
 public interface UserMapper {
+
     int deleteByPrimaryKey(Integer id);
 
     int insert(User record);
@@ -19,4 +20,6 @@ public interface UserMapper {
     int updateByPrimaryKey(User record);
 
     User queryUserLogin(Map map);
+
+    List<User> selectUsersByAcctLike(String selectCondition);
 }

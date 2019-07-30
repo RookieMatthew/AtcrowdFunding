@@ -44,4 +44,9 @@ public class UserServiceImpl implements UserService {
     public void addUser(User user) {
         userMapper.insert(user);
     }
+
+    @Override
+    public List<User> getUsersByAcctLike(String selectCondition) {
+        return userMapper.selectUsersByAcctLike(selectCondition);
+    }
 }

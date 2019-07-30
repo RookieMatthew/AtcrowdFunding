@@ -18,8 +18,21 @@ public interface UserService {
      * @return 返回查询到的用户
      * */
     User queryUserLogin(HashMap<String, Object> paramMap);
-
+    /**
+     * 查询所有管理员用户信息
+     * @return 返回所有信息的集合
+     * */
     List<User> getUsers();
-
+    /**
+     * 添加一个员工
+     * @param user 要添加的员工信息
+     * */
     void addUser(User user);
+
+    /**
+     * 查询管理员用户账号中存在selectCondition的用户，用于模糊查询
+     * @param selectCondition 查询条件
+     * @return 返回查询到的用户集合
+     * */
+    List<User> getUsersByAcctLike(String selectCondition);
 }

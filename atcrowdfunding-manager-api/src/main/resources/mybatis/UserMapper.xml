@@ -44,4 +44,14 @@
     from t_user
     where loginacct=#{loginacct} and userpswd=#{userpswd}
   </select>
+
+  <select id="selectUsersByAcctLike" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, loginacct, userpswd, username, email, createtime
+    from t_user
+    <where>
+      <if test="_parameter!=null and _parameter!=''">
+        loginacct like concat('%',#{_parameter},'%')
+      </if>
+    </where>
+  </select>
 </mapper>

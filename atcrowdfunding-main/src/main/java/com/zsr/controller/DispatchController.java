@@ -59,10 +59,14 @@ public class DispatchController {
     }
 
     /**
-     * 登陆成功条撞到管理主页面，main.jsp
+     * 登陆成功跳转到管理主页面，main.jsp
      */
     @RequestMapping("/main")
-    public String toMainHtml(){
+    public String toMainHtml(HttpSession session){
+        User user = (User) session.getAttribute(Const.LOGIN_USER);
+        if (user==null){
+            return "redirect:/login.htm";
+        }
         return "main";
     }
 

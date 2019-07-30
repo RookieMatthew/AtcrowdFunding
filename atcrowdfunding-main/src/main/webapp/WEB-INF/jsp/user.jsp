@@ -63,13 +63,13 @@
             <div class="tree">
                 <ul style="padding-left:0px;" class="list-group">
                     <li class="list-group-item tree-closed" >
-                        <a href="main.html"><i class="glyphicon glyphicon-dashboard"></i> 控制面板</a>
+                        <a href="${APP_PATH}/main.htm"><i class="glyphicon glyphicon-dashboard"></i> 控制面板</a>
                     </li>
                     <li class="list-group-item">
                         <span><i class="glyphicon glyphicon glyphicon-tasks"></i> 权限管理 <span class="badge" style="float:right">3</span></span>
                         <ul style="margin-top:10px;">
                             <li style="height:30px;">
-                                <a href="user.html" style="color:red;"><i class="glyphicon glyphicon-user"></i> 用户维护</a>
+                                <a href="${APP_PATH}/toUserPage.htm" style="color:red;"><i class="glyphicon glyphicon-user"></i> 用户维护</a>
                             </li>
                             <li style="height:30px;">
                                 <a href="role.html"><i class="glyphicon glyphicon-king"></i> 角色维护</a>
@@ -135,10 +135,10 @@
                         <div class="form-group has-feedback">
                             <div class="input-group">
                                 <div class="input-group-addon">查询条件</div>
-                                <input class="form-control has-success" type="text" placeholder="请输入查询条件">
+                                <input id="selectConditionText" class="form-control has-success" type="text" placeholder="请输入查询条件">
                             </div>
                         </div>
-                        <button type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
+                        <button id="selectConditionBtn" type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
                     </form>
                     <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
                     <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='add.html'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
@@ -236,14 +236,20 @@
         window.location.href = "edit.html";
     });
 
+    var jsonDataObj = {
+        pn:null,
+        selectCondition:null
+    }
     //首次加载用户信息
-    $(loadUser(1));
+    $(loadUser(1,null));
     //异步加载用户信息
-    function loadUser(pn) {
+    function loadUser(pn,selectCondition) {
         var listLoading;
+        jsonDataObj.pn=pn
+        jsonDataObj.selectCondition=selectCondition;
         $.ajax({
             url:"${APP_PATH}/users.do",
-            data:"pn="+pn,
+            data:jsonDataObj,
             type:"post",
             beforeSend:function(){
                 listLoading = layer.load(2, {time: 10*1000});
@@ -252,7 +258,7 @@
                 layer.close(listLoading);
                 if (result.code==100){
                     parseJsonToUserList(result);
-                    parseJsonToPage(result);
+                    parseJsonToPage(result,selectCondition);
                 } else{
                     layer.msg(result.message,{icon:0,shift:6});
                 }
@@ -283,32 +289,38 @@
         $("tbody").html(userListHtml);
     }
     //将服务器返回的json数据中的分页信息转换为html格式的数据进行显示
-    function parseJsonToPage(result) {
+    function parseJsonToPage(result,selectCondition) {
         var pageHtml = "";
         var pageInfo = result.info.pageInfo;
         if(pageInfo.hasPreviousPage){
-            pageHtml+='<li><a href="javascript:loadUser(1)">首页</a></li>';
-            pageHtml+='<li><a href="javascript:loadUser('+(pageInfo.pageNum-1)+')">上一页</a></li>';
+            pageHtml+='<li><a href="javascript:loadUser(1,'+selectCondition+')">首页</a></li>';
+            pageHtml+='<li><a href="javascript:loadUser('+(pageInfo.pageNum-1)+','+selectCondition+')">上一页</a></li>';
         }else{
             pageHtml+='<li class="disabled"><a href="#">首页</a></li>';
             pageHtml+='<li class="disabled"><a href="#">上一页</a></li>';
         }
         $.each(pageInfo.navigatepageNums,function (i,pn) {
             if(pageInfo.pageNum==pn){
-                pageHtml+='<li class="active"><a href="javascript:loadUser('+pn+')">'+pn+'</a></li>';
+                pageHtml+='<li class="active"><a href="javascript:loadUser('+pn+','+selectCondition+')">'+pn+'</a></li>';
             }else{
-                pageHtml+='<li><a href="javascript:loadUser('+pn+')">'+pn+'</a></li>';
+                pageHtml+='<li><a href="javascript:loadUser('+pn+','+selectCondition+')">'+pn+'</a></li>';
             }
         });
         if(pageInfo.hasNextPage){
-            pageHtml+='<li><a href="javascript:loadUser('+(pageInfo.pageNum+1)+')">下一页</a></li>';
-            pageHtml+='<li><a href="javascript:loadUser('+(pageInfo.pages)+')">末页</a></li>';
+            pageHtml+='<li><a href="javascript:loadUser('+(pageInfo.pageNum+1)+','+selectCondition+')">下一页</a></li>';
+            pageHtml+='<li><a href="javascript:loadUser('+(pageInfo.pages)+','+selectCondition+')">末页</a></li>';
         } else{
             pageHtml+='<li class="disabled" ><a href="#">下一页</a></li>';
             pageHtml+='<li class="disabled" ><a href="#">末页</a></li>';
         }
         $(".pagination").html(pageHtml);
     }
+
+    //点击查询按钮，发送查询请求，局部刷新列表
+    $("#selectConditionBtn").click(function () {
+        var selectCondition = $("#selectConditionText").val();
+        loadUser(1,selectCondition);
+    });
 </script>
 </body>
 </html>

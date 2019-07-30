@@ -2,6 +2,7 @@ package com.zsr.manager.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zsr.utils.Const;
 import com.zsr.utils.Message;
 import com.zsr.bean.User;
 import com.zsr.manager.service.UserService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -29,7 +31,11 @@ public class UserController {
      * 仅用于跳转到user.jsp
      * */
     @RequestMapping("/toUserPage")
-    public String toUserPage(){
+    public String toUserPage(HttpSession session){
+        User user = (User) session.getAttribute(Const.LOGIN_USER);
+        if (user==null){
+            return "redirect:/login.htm";
+        }
         return "user";
     }
 
@@ -38,14 +44,22 @@ public class UserController {
      */
     @RequestMapping("/users")
     @ResponseBody
-    public Message userList(@RequestParam(value = "pn",defaultValue = "1") Integer pn){
+    public Message userList(@RequestParam(value = "pn",defaultValue = "1") Integer pn,
+                            @RequestParam(value = "selectCondition",defaultValue = "") String selectCondition){
+        System.out.println("pn="+pn);
+        System.out.println("selectCondition="+selectCondition);
+        List<User> users;
         try {
             PageHelper.startPage(pn,15);
-            List<User> users = userService.getUsers();
-            System.out.println(users);
+            if (selectCondition==null||"".equals(selectCondition.trim())){
+                users = userService.getUsers();
+            }else {
+                users = userService.getUsersByAcctLike(selectCondition);
+            }
             PageInfo pageInfo = new PageInfo(users,7);
             return Message.success().addInfo("pageInfo",pageInfo);
         }catch (Exception e){
+            e.printStackTrace();
             return Message.fail("用户信息加载失败！");
         }
     }
