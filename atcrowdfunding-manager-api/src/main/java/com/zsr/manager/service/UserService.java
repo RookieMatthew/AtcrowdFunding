@@ -49,4 +49,17 @@ public interface UserService {
      * @return 影响数据库行数
      * */
     int updateUser(User user);
+    /**
+     * 删除员工
+     * @param id 要删除员工的主键id
+     * @return 影响数据库行数
+     * */
+    int deleteUser(Integer id);
+
+    /**
+     * 批量删除员工
+     * @param id 要删除员工的主键id
+     * @return 影响数据库行数
+     * */
+    int deleteBatchUser(String[] ids);
 }

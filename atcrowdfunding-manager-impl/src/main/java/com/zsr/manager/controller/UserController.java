@@ -103,6 +103,9 @@ public class UserController {
         return "edit";
     }
 
+    /**
+     * 处理用户修改请求
+     * */
     @RequestMapping(value = "/user/{id}",method = RequestMethod.PUT)
     @ResponseBody
     public Message updateUser(User user){
@@ -115,4 +118,23 @@ public class UserController {
         return Message.success("更新信息成功!");
     }
 
+    /**
+     * 处理用户删除请求
+     * */
+    @RequestMapping(value = "/user/{id}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public Message deleteUser(@PathVariable String id){
+        try {
+            if (!id.contains("-")){
+                userService.deleteUser(Integer.parseInt(id));
+            }else {
+                String[] ids = id.split("-");
+                userService.deleteBatchUser(ids);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return Message.fail("删除用户失败!");
+        }
+        return Message.success("删除用户成功!");
+    }
 }

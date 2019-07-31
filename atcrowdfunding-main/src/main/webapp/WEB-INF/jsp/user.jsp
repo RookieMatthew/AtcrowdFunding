@@ -140,7 +140,7 @@
                         </div>
                         <button id="selectConditionBtn" type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
                     </form>
-                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
+                    <button id="batchDeleteBtn" type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
                     <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='${APP_PATH}/toAddPage.htm'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
                     <br>
                     <hr style="clear:both;">
@@ -149,7 +149,7 @@
                             <thead>
                             <tr >
                                 <th width="30">#</th>
-                                <th width="30"><input type="checkbox"></th>
+                                <th width="30"><input id="allCheckbox" type="checkbox"></th>
                                 <th>账号</th>
                                 <th>名称</th>
                                 <th>邮箱地址</th>
@@ -256,6 +256,7 @@
             },
             success:function (result) {
                 layer.close(listLoading);
+                $("#allCheckbox").prop("checked",false);
                 if (result.code==100){
                     parseJsonToUserList(result);
                     parseJsonToPage(result,selectCondition);
@@ -275,14 +276,14 @@
         $.each(userList,function (i,user) {
             userListHtml+='<tr>';
             userListHtml+='<td>'+(i+1)+'</td>';
-            userListHtml+='<td><input type="checkbox"></td>';
+            userListHtml+='<td><input deleteId='+user.id+' class="aCheckbox" type="checkbox"></td>';
             userListHtml+='<td>'+user.loginacct+'</td>';
             userListHtml+='<td>'+user.username+'</td>';
             userListHtml+='<td>'+user.email+'</td>';
             userListHtml+='<td>';
             userListHtml+='<button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>';
             userListHtml+='<button type="button" onclick="window.location.href=\''+'${APP_PATH}/toUpdatePage.htm?id='+user.id+'\'" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>';
-            userListHtml+='<button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
+            userListHtml+='<button type="button" onclick="doDelete('+user.id+',\''+user.loginacct+'\')" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
             userListHtml+='</td>';
             userListHtml+='</tr>';
         });
@@ -320,6 +321,90 @@
     $("#selectConditionBtn").click(function () {
         var selectCondition = $("#selectConditionText").val();
         loadUser(1,selectCondition);
+    });
+    
+    //删除用户请求
+    function doDelete(id,loginacct) {
+        var listLoading;
+        layer.confirm("确认删除账户【"+loginacct+"】吗？",  {icon: 3, title:'提示'}, function(cindex){
+            layer.close(cindex);
+            $.ajax({
+                url:"${APP_PATH}/user/"+id+".do",
+                data:{
+                    "_method":"delete"
+                },
+                type:"post",
+                beforeSend:function(){
+                    listLoading = layer.load(2, {time: 10*1000});
+                    return true;
+                },
+                success:function (result) {
+                    layer.close(listLoading);
+                    if (result.code==100){
+                        layer.msg(result.message, {time:1500, icon:1, shift:6});
+                        window.location.href="${APP_PATH}/toUserPage.htm";
+                    } else{
+                        layer.msg(result.message,{icon:0,shift:6});
+                    }
+                },
+                error:function () {
+                    layer.msg("请求错误！",{icon:0,shift:6});
+                }
+            });
+        }, function(cindex){
+            layer.close(cindex);
+        });
+    }
+
+    //为复选框添加全选全不选事件
+    $("#allCheckbox").click(function () {
+        $("tbody tr td input[type=checkbox]").prop("checked",$(this).prop("checked"));
+    });
+    //全部选中时最上边的也应该被选中
+    $(document).on("click",".aCheckbox",function () {
+        var flag = $(".aCheckbox:checked").length==$(".aCheckbox").length;
+        $("#allCheckbox").prop("checked",flag);
+    });
+    //点击删除按钮进行批量删除
+    $("#batchDeleteBtn").click(function () {
+        if ($(".aCheckbox:checked").length==0){
+            layer.msg("请选择要删除的用户！", {time:1500, icon:0, shift:6});
+            return false;
+        }
+        var id="";
+        $.each($(".aCheckbox:checked"),function () {
+            id+=$(this).attr("deleteId");
+            id+="-";
+        });
+        var listLoading;
+        layer.confirm("确认删除账户这些用户吗？",  {icon: 3, title:'提示'}, function(cindex){
+            layer.close(cindex);
+            $.ajax({
+                url:"${APP_PATH}/user/"+id+".do",
+                data:{
+                    "_method":"delete"
+                },
+                type:"post",
+                beforeSend:function(){
+                    listLoading = layer.load(2, {time: 10*1000});
+                    return true;
+                },
+                success:function (result) {
+                    layer.close(listLoading);
+                    if (result.code==100){
+                        layer.msg(result.message, {time:1500, icon:1, shift:6});
+                        window.location.href="${APP_PATH}/toUserPage.htm";
+                    } else{
+                        layer.msg(result.message,{icon:0,shift:6});
+                    }
+                },
+                error:function () {
+                    layer.msg("请求错误！",{icon:0,shift:6});
+                }
+            });
+        }, function(cindex){
+            layer.close(cindex);
+        });
     });
 </script>
 </body>
