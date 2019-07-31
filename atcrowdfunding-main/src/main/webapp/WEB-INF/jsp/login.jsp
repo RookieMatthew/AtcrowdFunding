@@ -28,7 +28,7 @@
     <form action="${APP_PATH}/doLogin.do" method="post" id="loginForm" class="form-signin" role="form">
         <h2 class="form-signin-heading"><i class="glyphicon glyphicon-log-in"></i> 用户登录</h2>
         <div class="form-group has-success has-feedback">
-            <input name="loginacct" type="text" class="form-control" id="floginacct" value="zhangsan" placeholder="请输入登录账号" autofocus>
+            <input name="loginacct" type="text" class="form-control" id="floginacct" value="zhangshouren" placeholder="请输入登录账号" autofocus>
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-success has-feedback">
