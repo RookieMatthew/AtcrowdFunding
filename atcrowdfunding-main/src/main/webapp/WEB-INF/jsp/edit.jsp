@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html lang="zh_CN">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -125,30 +126,30 @@
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <ol class="breadcrumb">
-                <li><a href="#">首页</a></li>
-                <li><a href="#">数据列表</a></li>
-                <li class="active">新增</li>
+                <li><a href="${APP_PATH}/main.htm">首页</a></li>
+                <li><a href="${APP_PATH}/toUserPage.htm">数据列表</a></li>
+                <li class="active">修改</li>
             </ol>
             <div class="panel panel-default">
                 <div class="panel-heading">表单数据<div style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-question-sign"></i></div></div>
                 <div class="panel-body">
-                    <form id="addForm" role="form">
+                    <form id="updateForm" role="form">
                         <div class="form-group">
                             <label for="floginacct">登陆账号</label>
-                            <input type="text" class="form-control" id="floginacct" placeholder="请输入登陆账号">
-                            <p id="loginacctTip" class="help-block label label-warning"></p>
+                            <input type="text" value="${user.loginacct}" class="form-control" id="floginacct" placeholder="请输入登陆账号">
+                            <p id="loginacctTip"  class="help-block label label-warning"></p>
                         </div>
                         <div class="form-group">
                             <label for="fusername">用户名称</label>
-                            <input type="text" class="form-control" id="fusername" placeholder="请输入用户名称">
+                            <input type="text" value="${user.username}" class="form-control" id="fusername" placeholder="请输入用户名称">
                             <p id="usernameTip" class="help-block label label-warning"></p>
                         </div>
                         <div class="form-group">
                             <label for="femail">邮箱地址</label>
-                            <input type="email" class="form-control" id="femail" placeholder="请输入邮箱地址">
+                            <input type="email" class="form-control" value="${user.email}" id="femail" placeholder="请输入邮箱地址">
                             <p id="emailTip" class="help-block label label-warning"></p>
                         </div>
-                        <button type="button" id="addUserBtn" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> 新增</button>
+                        <button type="button" id="updateUserBtn" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> 修改</button>
                         <button type="button" id="resetBtn" class="btn btn-danger"><i class="glyphicon glyphicon-refresh"></i> 重置</button>
                     </form>
                 </div>
@@ -199,18 +200,20 @@
             }
         });
     });
+
     //点击按钮，发送添加请求
-    $("#addUserBtn").click(function () {
+    $("#updateUserBtn").click(function () {
         var floginacct = $("#floginacct");
         var fusername = $("#fusername");
         var femail = $("#femail");
         var listLoading;
         $.ajax({
-            url:"${APP_PATH}/user.do",
+            url:"${APP_PATH}/user/${user.id}.do",
             data:{
                 "loginacct":floginacct.val(),
                 "username":fusername.val(),
-                "email":femail.val()
+                "email":femail.val(),
+                "_method":"put"
             },
             type:"post",
             beforeSend:function(){
@@ -233,9 +236,8 @@
     });
     //重置表单
     $("#resetBtn").click(function () {
-        $("#addForm")[0].reset();
+        $("#updateForm")[0].reset();
     });
 </script>
 </body>
 </html>
-

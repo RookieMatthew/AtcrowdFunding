@@ -57,4 +57,14 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsersByAcctLike(String selectCondition) {
         return userMapper.selectUsersByAcctLike(selectCondition);
     }
+
+    @Override
+    public User getUserById(Integer id) {
+       return userMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public int updateUser(User user) {
+        return userMapper.updateByPrimaryKey(user);
+    }
 }

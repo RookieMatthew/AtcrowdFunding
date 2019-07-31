@@ -8,10 +8,8 @@ import com.zsr.bean.User;
 import com.zsr.manager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -90,16 +88,31 @@ public class UserController {
             return Message.fail("用户添加失败！");
         }
     }
+
     /**
-     * 同步请求，携带user信息返回到user.jsp页面
-     */
-   /* @RequestMapping("/users")
-    public String userList(@RequestParam(value = "pn",defaultValue = "1") Integer pn, Model model){
-        PageHelper.startPage(pn,15);
-        List<User> users = userService.getUsers();
-        System.out.println(users);
-        PageInfo pageInfo = new PageInfo(users,7);
-        model.addAttribute("pageInfo",pageInfo);
-        return "user";
-    }*/
+     * 跳转到edit.jsp,并查询所要回显的数据
+     * */
+    @RequestMapping("/toUpdatePage")
+    public String toUpdatePage(HttpSession session, Integer id, Model model){
+        User user = (User) session.getAttribute(Const.LOGIN_USER);
+        if (user==null){
+            return "redirect:/login.htm";
+        }
+        User updateUser = userService.getUserById(id);
+        model.addAttribute("user",updateUser);
+        return "edit";
+    }
+
+    @RequestMapping(value = "/user/{id}",method = RequestMethod.PUT)
+    @ResponseBody
+    public Message updateUser(User user){
+        try {
+            userService.updateUser(user);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Message.fail("更新信息失败!");
+        }
+        return Message.success("更新信息成功!");
+    }
+
 }

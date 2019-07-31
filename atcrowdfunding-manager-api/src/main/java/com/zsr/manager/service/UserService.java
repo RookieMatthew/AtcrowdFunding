@@ -36,4 +36,17 @@ public interface UserService {
      * @return 返回查询到的用户集合
      * */
     List<User> getUsersByAcctLike(String selectCondition);
+    /**
+     * 通过主键id查询某个个员工
+     * @param id 要查询的员工id
+     * @return 查询到的员工信息
+     * */
+    User getUserById(Integer id);
+
+    /**
+     * 修改员工信息
+     * @param user 要更新的员工信息
+     * @return 影响数据库行数
+     * */
+    int updateUser(User user);
 }

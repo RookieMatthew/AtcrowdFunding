@@ -13,6 +13,18 @@ public class User {
 
     private String createtime;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", loginacct='" + loginacct + '\'' +
+                ", userpswd='" + userpswd + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", createtime='" + createtime + '\'' +
+                '}';
+    }
+
     public Integer getId() {
         return id;
     }

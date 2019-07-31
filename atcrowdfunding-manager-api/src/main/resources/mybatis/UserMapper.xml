@@ -24,10 +24,8 @@
   <update id="updateByPrimaryKey" parameterType="com.zsr.bean.User">
     update t_user
     set loginacct = #{loginacct,jdbcType=VARCHAR},
-      userpswd = #{userpswd,jdbcType=CHAR},
       username = #{username,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      createtime = #{createtime,jdbcType=CHAR}
+      email = #{email,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -38,7 +36,7 @@
   <select id="selectAll" resultMap="BaseResultMap">
     select id, loginacct, username, email, createtime
     from t_user
-    order by createtime
+    order by createtime desc
   </select>
   <select id="queryUserLogin" parameterType="Map" resultMap="BaseResultMap">
     select id, loginacct, userpswd, username, email, createtime
@@ -54,7 +52,7 @@
         loginacct like concat('%',#{_parameter},'%')
       </if>
     </where>
-    order by createtime
+    order by createtime desc
   </select>
 
 </mapper>
