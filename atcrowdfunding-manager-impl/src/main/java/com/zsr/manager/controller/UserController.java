@@ -2,17 +2,21 @@ package com.zsr.manager.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zsr.bean.Role;
 import com.zsr.utils.Const;
 import com.zsr.utils.Message;
 import com.zsr.bean.User;
 import com.zsr.manager.service.UserService;
+import com.zsr.utils.VO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Demo class
@@ -35,7 +39,7 @@ public class UserController {
         if (user==null){
             return "redirect:/login.htm";
         }
-        return "user";
+        return "user/user";
     }
 
     /**
@@ -71,7 +75,7 @@ public class UserController {
         if (user==null){
             return "redirect:/login.htm";
         }
-        return "add";
+        return "user/add";
     }
 
     /**
@@ -100,7 +104,7 @@ public class UserController {
         }
         User updateUser = userService.getUserById(id);
         model.addAttribute("user",updateUser);
-        return "edit";
+        return "user/edit";
     }
 
     /**
@@ -136,5 +140,63 @@ public class UserController {
             return Message.fail("删除用户失败!");
         }
         return Message.success("删除用户成功!");
+    }
+
+
+    /**
+     * 跳转到用户角色分配页面assignRole.jsp
+     * */
+    @RequestMapping("/toAssignRolePage")
+    public String toAssignRolePage(HttpSession session, Integer id, Map map){
+        User user = (User) session.getAttribute(Const.LOGIN_USER);
+        if (user==null){
+            return "redirect:/login.htm";
+        }
+        List<Role> allRoleList = userService.queryAllRole();
+        List<Integer> userRoleIdList = userService.queryRoleIdByUserId(id);
+        List<Role> assignList = new ArrayList<>();
+        List<Role> notAssignList = new ArrayList<>();
+        for (Role role : allRoleList) {
+            if (userRoleIdList.contains(role.getId())){
+                assignList.add(role);
+            }else {
+                notAssignList.add(role);
+            }
+        }
+        map.put("assignList",assignList);
+        map.put("notAssignList",notAssignList);
+        map.put("userId",id);
+        return "user/assignRole";
+    }
+   /**
+    * 用户角色分配
+    * */
+   @RequestMapping(value = "/user/assignRoleToUser/{userId}",method = RequestMethod.POST)
+   @ResponseBody
+   public Message assignRoleToUser(@PathVariable String userId, VO vo){
+       try {
+           userService.assignRoleToUser(userId,vo);
+       }catch (Exception e){
+           e.printStackTrace();
+           return Message.fail("角色分配失败！");
+       }
+      return Message.success("角色分配成功");
+   }
+
+    /**
+     * 用户角色移除
+     * */
+    @RequestMapping(value = "/user/removeRoleToUser/{userId}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public Message removeRoleToUser(@PathVariable String userId, VO vo){
+        System.out.println(vo.ids);
+        System.out.println(userId);
+        try {
+            userService.removeRoleToUser(userId,vo);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Message.fail("角色分配失败！");
+        }
+        return Message.success("角色分配成功");
     }
 }

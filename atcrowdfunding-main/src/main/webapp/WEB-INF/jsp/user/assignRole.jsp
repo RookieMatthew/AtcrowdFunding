@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -29,29 +29,7 @@
             <div><a class="navbar-brand" style="font-size:32px;" href="user.html">众筹平台 - 用户维护</a></div>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li style="padding-top:8px;">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown">
-                            <i class="glyphicon glyphicon-user"></i> ${sessionScope.user.username} <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#"><i class="glyphicon glyphicon-cog"></i> 个人设置</a></li>
-                            <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>
-                            <li class="divider"></li>
-                            <li><a href="${APP_PATH}/doLogout.do"><i class="glyphicon glyphicon-off"></i> 退出系统</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li style="margin-left:10px;padding-top:8px;">
-                    <button type="button" class="btn btn-default btn-danger">
-                        <span class="glyphicon glyphicon-question-sign"></span> 帮助
-                    </button>
-                </li>
-            </ul>
-            <form class="navbar-form navbar-right">
-                <input type="text" class="form-control" placeholder="Search...">
-            </form>
+            <jsp:include page="/WEB-INF/jsp/common/userInfoHead.jsp"></jsp:include>
         </div>
     </div>
 </nav>
@@ -67,29 +45,35 @@
             <ol class="breadcrumb">
                 <li><a href="${APP_PATH}/main.htm">首页</a></li>
                 <li><a href="${APP_PATH}/toUserPage.htm">数据列表</a></li>
-                <li class="active">修改</li>
+                <li class="active">角色分配</li>
             </ol>
             <div class="panel panel-default">
-                <div class="panel-heading">表单数据<div style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-question-sign"></i></div></div>
                 <div class="panel-body">
-                    <form id="updateForm" role="form">
+                    <form role="form" class="form-inline">
                         <div class="form-group">
-                            <label for="floginacct">登陆账号</label>
-                            <input type="text" value="${user.loginacct}" class="form-control" id="floginacct" placeholder="请输入登陆账号">
-                            <p id="loginacctTip"  class="help-block label label-warning"></p>
+                            <label for="exampleInputPassword1">未分配角色列表</label><br>
+                            <select id="leftSelect" class="form-control" multiple size="10" style="width:250px;overflow-y:auto;">
+
+                                <c:forEach items="${notAssignList}" var="role">
+                                    <option value="${role.id}">${role.name}</option>
+                                </c:forEach>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="fusername">用户名称</label>
-                            <input type="text" value="${user.username}" class="form-control" id="fusername" placeholder="请输入用户名称">
-                            <p id="usernameTip" class="help-block label label-warning"></p>
+                            <ul>
+                                <li id="leftToRightBtn" class="btn btn-default glyphicon glyphicon-chevron-right"></li>
+                                <br>
+                                <li id="RightToLeftBtn" class="btn btn-default glyphicon glyphicon-chevron-left" style="margin-top:20px;"></li>
+                            </ul>
                         </div>
-                        <div class="form-group">
-                            <label for="femail">邮箱地址</label>
-                            <input type="email" class="form-control" value="${user.email}" id="femail" placeholder="请输入邮箱地址">
-                            <p id="emailTip" class="help-block label label-warning"></p>
+                        <div class="form-group" style="margin-left:40px;">
+                            <label for="exampleInputPassword1">已分配角色列表</label><br>
+                            <select  id="rightSelect" class="form-control" multiple size="10" style="width:250px;overflow-y:auto;">
+                                <c:forEach items="${assignList}" var="role">
+                                    <option value="${role.id}">${role.name}</option>
+                                </c:forEach>
+                            </select>
                         </div>
-                        <button type="button" id="updateUserBtn" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> 修改</button>
-                        <button type="button" id="resetBtn" class="btn btn-danger"><i class="glyphicon glyphicon-refresh"></i> 重置</button>
                     </form>
                 </div>
             </div>
@@ -140,30 +124,32 @@
         });
     });
 
-    //点击按钮，发送添加请求
-    $("#updateUserBtn").click(function () {
-        var floginacct = $("#floginacct");
-        var fusername = $("#fusername");
-        var femail = $("#femail");
+    //分配角色
+    $("#leftToRightBtn").click(function () {
+        var left = $("#leftSelect option:selected");
+        if (left.length==0){
+            layer.msg("请选择你要分配的角色！",{icon:0,shift:6});
+            return false;
+        }
+        var ajaxObj={};
         var listLoading;
+        $.each(left,function (i,role) {
+            ajaxObj["ids["+i+"]"]=role.value;
+        });
         $.ajax({
-            url:"${APP_PATH}/user/${user.id}.do",
-            data:{
-                "loginacct":floginacct.val(),
-                "username":fusername.val(),
-                "email":femail.val(),
-                "_method":"put"
-            },
+            url:"${APP_PATH}/user/assignRoleToUser/${userId}.do",
+            data:ajaxObj,
             type:"post",
-            beforeSend:function(){
+            beforeSend:function () {
                 listLoading = layer.load(2, {time: 10*1000});
                 return true;
             },
             success:function (result) {
                 layer.close(listLoading);
                 if (result.code==100){
+                    $("#rightSelect").append(left);
+                    $("#rightSelect option").prop("selected",false);
                     layer.msg(result.message, {time:1500, icon:1, shift:6});
-                    window.location.href="${APP_PATH}/toUserPage.htm";
                 } else{
                     layer.msg(result.message,{icon:0,shift:6});
                 }
@@ -173,9 +159,42 @@
             }
         });
     });
-    //重置表单
-    $("#resetBtn").click(function () {
-        $("#updateForm")[0].reset();
+    //移除角色
+    $("#RightToLeftBtn").click(function () {
+        var right = $("#rightSelect option:selected");
+        if (right.length==0){
+            layer.msg("请选择你要移除的角色！",{icon:0,shift:6});
+            return false;
+        }
+        var ajaxObj={};
+        var listLoading;
+        $.each(right,function (i,role) {
+            ajaxObj["ids["+i+"]"]=role.value;
+            alert(role.value)
+        });
+        ajaxObj["_method"]="delete";
+        $.ajax({
+            url:"${APP_PATH}/user/removeRoleToUser/${userId}.do",
+            data:ajaxObj,
+            type:"post",
+            beforeSend:function () {
+                listLoading = layer.load(2, {time: 10*1000});
+                return true;
+            },
+            success:function (result) {
+                layer.close(listLoading);
+                if (result.code==100){
+                    $("#leftSelect").append(right);
+                    $("#leftSelect option").prop("selected",false);
+                    layer.msg(result.message, {time:1500, icon:1, shift:6});
+                } else{
+                    layer.msg(result.message,{icon:0,shift:6});
+                }
+            },
+            error:function () {
+                layer.msg("请求错误！",{icon:0,shift:6});
+            }
+        })
     });
 </script>
 </body>

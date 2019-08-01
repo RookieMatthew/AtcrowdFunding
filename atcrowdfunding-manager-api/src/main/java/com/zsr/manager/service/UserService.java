@@ -1,6 +1,8 @@
 package com.zsr.manager.service;
 
+import com.zsr.bean.Role;
 import com.zsr.bean.User;
+import com.zsr.utils.VO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,9 +59,36 @@ public interface UserService {
     int deleteUser(Integer id);
 
     /**
-     * 批量删除员工
-     * @param id 要删除员工的主键id
+     * 批量删除用户
+     * @param ids 要删除用户的主键id数组
      * @return 影响数据库行数
      * */
     int deleteBatchUser(String[] ids);
+
+    /**
+     * 查询用户所能分配的所有角色
+     * @return 所有角色的集合
+     * */
+    List<Role> queryAllRole();
+
+    /**
+     * 查询某个用户被分配的所有角色的角色id
+     * @param id 要查询员工的主键id
+     * @return 角色id集合
+     * */
+    List<Integer> queryRoleIdByUserId(Integer id);
+    /**
+     * 为用户分配角色
+     * @param userId 要分配的员工的主键id
+     *  @param vo 封装了即将被分配的角色
+     * @return 影响数据库条数
+     * */
+    int assignRoleToUser(String userId, VO vo);
+    /**
+     * 移除用户担任角色
+     * @param userId 要操作的员工的主键id
+     *  @param vo 封装了即将要移除的角色
+     * @return 影响数据库条数
+     * */
+    int removeRoleToUser(String userId, VO vo);
 }

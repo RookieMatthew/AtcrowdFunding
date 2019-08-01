@@ -30,29 +30,7 @@
             <div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 用户维护</a></div>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li style="padding-top:8px;">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown">
-                            <i class="glyphicon glyphicon-user"></i> ${sessionScope.user.username} <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#"><i class="glyphicon glyphicon-cog"></i> 个人设置</a></li>
-                            <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>
-                            <li class="divider"></li>
-                            <li><a href="${APP_PATH}/doLogout.do"><i class="glyphicon glyphicon-off"></i> 退出系统</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li style="margin-left:10px;padding-top:8px;">
-                    <button type="button" class="btn btn-default btn-danger">
-                        <span class="glyphicon glyphicon-question-sign"></span> 帮助
-                    </button>
-                </li>
-            </ul>
-            <form class="navbar-form navbar-right">
-                <input type="text" class="form-control" placeholder="Search...">
-            </form>
+            <jsp:include page="/WEB-INF/jsp/common/userInfoHead.jsp"></jsp:include>
         </div>
     </div>
 </nav>
@@ -96,49 +74,13 @@
                             </tr>
                             </thead>
                             <tbody>
-                                <%--<c:forEach items="${pageInfo.list}" var="user" varStatus="status">
-                                    <tr>
-                                        <td>${status.count}</td>
-                                        <td><input type="checkbox"></td>
-                                        <td>${user.loginacct}</td>
-                                        <td>${user.username}</td>
-                                        <td>${user.email}</td>
-                                        <td>
-                                            <button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>
-                                            <button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
-                                            <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
-                                        </td>
-                                    </tr>
-                                </c:forEach>--%>
+                                <%----%>
                             </tbody>
                             <tfoot>
                                 <tr >
                                     <td colspan="6" align="center">
                                         <ul class="pagination">
-                                            <%--<c:if test="${pageInfo.hasPreviousPage}">
-                                                <li><a href="${APP_PATH}/users.do?pn=1">首页</a></li>
-                                                <li><a href="${APP_PATH}/users.do?pn=${pageInfo.pageNum-1}">上一页</a></li>
-                                            </c:if>
-                                            <c:if test="${!pageInfo.hasPreviousPage}">
-                                                <li class="disabled"><a href="#">首页</a></li>
-                                                <li class="disabled"><a href="#">上一页</a></li>
-                                            </c:if>
-                                            <c:forEach items="${pageInfo.navigatepageNums}" var="pn" >
-                                                <c:if test="${pageInfo.pageNum==pn}">
-                                                    <li class="active"><a href="${APP_PATH}/users.do?pn=${pn}">${pn}</a></li>
-                                                </c:if>
-                                                <c:if test="${pageInfo.pageNum!=pn}">
-                                                    <li><a href="${APP_PATH}/users.do?pn=${pn}">${pn}</a></li>
-                                                </c:if>
-                                            </c:forEach>
-                                            <c:if test="${pageInfo.hasNextPage}">
-                                                <li><a href="${APP_PATH}/users.do?pn=${pageInfo.pageNum+1}">下一页</a></li>
-                                                <li><a href="${APP_PATH}/users.do?pn=${pageInfo.pages}">末页</a></li>
-                                            </c:if>
-                                            <c:if test="${!pageInfo.hasNextPage}">
-                                                <li class="disabled" ><a href="#">下一页</a></li>
-                                                <li class="disabled" ><a href="#">末页</a></li>
-                                            </c:if>--%>
+                                           <%----%>
                                         </ul>
                                     </td>
                                 </tr>
@@ -220,9 +162,9 @@
             userListHtml+='<td>'+user.username+'</td>';
             userListHtml+='<td>'+user.email+'</td>';
             userListHtml+='<td>';
-            userListHtml+='<button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>';
-            userListHtml+='<button type="button" onclick="window.location.href=\''+'${APP_PATH}/toUpdatePage.htm?id='+user.id+'\'" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>';
-            userListHtml+='<button type="button" onclick="doDelete('+user.id+',\''+user.loginacct+'\')" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
+            userListHtml+=' <button type="button" onclick="window.location.href=\''+'${APP_PATH}/toAssignRolePage.htm?id='+user.id+'\'" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>';
+            userListHtml+=' <button type="button" onclick="window.location.href=\''+'${APP_PATH}/toUpdatePage.htm?id='+user.id+'\'" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>';
+            userListHtml+=' <button type="button" onclick="doDelete('+user.id+',\''+user.loginacct+'\')" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
             userListHtml+='</td>';
             userListHtml+='</tr>';
         });

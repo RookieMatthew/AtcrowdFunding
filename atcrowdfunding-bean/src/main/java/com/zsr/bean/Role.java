@@ -1,5 +1,7 @@
 package com.zsr.bean;
 
+import java.util.Objects;
+
 public class Role {
     private Integer id;
 
@@ -20,4 +22,13 @@ public class Role {
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
     }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
 }

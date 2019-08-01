@@ -55,4 +55,24 @@
     order by createtime desc
   </select>
 
+  <select id="queryAllRole" resultType="Role">
+      select id,name from t_role;
+  </select>
+
+  <select id="queryRoleIdByUserId" resultType="int">
+      select roleid from t_user_role where userid = #{_paramater}
+  </select>
+
+  <insert id="assignRoleToUser">
+    <foreach collection="vo.ids" item="roleid" separator=";">
+      insert into t_user_role(userid,roleid) values(#{userId},#{roleid})
+    </foreach>
+  </insert>
+
+  <delete id="removeRoleToUser">
+    delete from t_user_role where userid = #{userId} and roleid in
+    <foreach collection="vo.ids" item="roleid" open="(" separator="," close=")">
+      #{roleid}
+    </foreach>
+  </delete>
 </mapper>

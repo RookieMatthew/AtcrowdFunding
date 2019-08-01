@@ -1,11 +1,13 @@
 package com.zsr.manager.service.impl;
 
+import com.zsr.bean.Role;
 import com.zsr.bean.User;
 import com.zsr.exception.LoginFailException;
 import com.zsr.manager.dao.UserMapper;
 import com.zsr.manager.service.UserService;
 import com.zsr.utils.Const;
 import com.zsr.utils.MD5Util;
+import com.zsr.utils.VO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -83,5 +85,23 @@ public class UserServiceImpl implements UserService {
         return i;
     }
 
+    @Override
+    public List<Role> queryAllRole() {
+        return userMapper.queryAllRole();
+    }
 
+    @Override
+    public List<Integer> queryRoleIdByUserId(Integer id) {
+        return userMapper.queryRoleIdByUserId(id);
+    }
+
+    @Override
+    public int assignRoleToUser(String userId, VO vo) {
+        return userMapper.assignRoleToUser(userId,vo);
+    }
+
+    @Override
+    public int removeRoleToUser(String userId, VO vo) {
+        return userMapper.removeRoleToUser(userId,vo);
+    }
 }
