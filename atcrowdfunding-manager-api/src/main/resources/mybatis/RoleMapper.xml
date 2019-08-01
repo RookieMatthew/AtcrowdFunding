@@ -27,4 +27,15 @@
     select id, name
     from t_role
   </select>
+  <select id="getRolesByNameLike" resultMap="BaseResultMap">
+    select id, name
+    from t_role
+    where name like concat('%',#{_parameter},'%')
+  </select>
+  <delete id="deleteRoles">
+    delete from t_role where id in
+    <foreach collection="vo.ids" open="(" separator="," close=")" item="roleId">
+      #{roleId}
+    </foreach>
+  </delete>
 </mapper>

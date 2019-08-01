@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="zh_CN">
 <head>
@@ -27,7 +26,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
-            <div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 用户维护</a></div>
+            <div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 角色维护</a></div>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <jsp:include page="/WEB-INF/jsp/common/userInfoHead.jsp"></jsp:include>
@@ -39,7 +38,7 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <div class="tree">
-            <jsp:include page="/WEB-INF/jsp/common/menu.jsp"></jsp:include>
+                <jsp:include page="/WEB-INF/jsp/common/menu.jsp"></jsp:include>
             </div>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -52,13 +51,13 @@
                         <div class="form-group has-feedback">
                             <div class="input-group">
                                 <div class="input-group-addon">查询条件</div>
-                                <input id="selectConditionText" class="form-control has-success" type="text" placeholder="请输入查询条件">
+                                <input  id="selectConditionText" class="form-control has-success" type="text" placeholder="请输入查询条件">
                             </div>
                         </div>
-                        <button id="selectConditionBtn" type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
+                        <button  id="selectConditionBtn"  type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
                     </form>
-                    <button id="batchDeleteBtn" type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
-                    <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='${APP_PATH}/toAddPage.htm'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
+                    <button type="button" id="batchDeleteBtn" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
+                    <button type="button" id="" class="btn btn-primary" style="float:right;" onclick="window.location.href='${APP_PATH}/role/toAddPage.htm'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
                     <br>
                     <hr style="clear:both;">
                     <div class="table-responsive">
@@ -67,20 +66,18 @@
                             <tr >
                                 <th width="30">#</th>
                                 <th width="30"><input id="allCheckbox" type="checkbox"></th>
-                                <th>账号</th>
                                 <th>名称</th>
-                                <th>邮箱地址</th>
                                 <th width="100">操作</th>
                             </tr>
                             </thead>
                             <tbody>
-                                <%----%>
+                             <%----%>
                             </tbody>
                             <tfoot>
                                 <tr >
                                     <td colspan="6" align="center">
                                         <ul class="pagination">
-                                           <%----%>
+                                            <%----%>
                                         </ul>
                                     </td>
                                 </tr>
@@ -110,18 +107,16 @@
             }
         });
     });
+
     $("tbody .btn-success").click(function(){
-        window.location.href = "assignRole.html";
-    });
-    $("tbody .btn-primary").click(function(){
-        window.location.href = "edit.html";
+        window.location.href = "assignPermission.html";
     });
 
     var jsonDataObj = {
         pn:null,
         selectCondition:null
     }
-    //首次加载用户信息
+    //首次加载角色信息
     $(loadUser(1,""));
     //异步加载用户信息
     function loadUser(pn,selectCondition) {
@@ -129,7 +124,7 @@
         jsonDataObj.pn=pn
         jsonDataObj.selectCondition=selectCondition;
         $.ajax({
-            url:"${APP_PATH}/users.do",
+            url:"${APP_PATH}/roles.do",
             data:jsonDataObj,
             type:"get",
             beforeSend:function(){
@@ -139,7 +134,7 @@
                 layer.close(listLoading);
                 $("#allCheckbox").prop("checked",false);
                 if (result.code==100){
-                    parseJsonToUserList(result);
+                    parseJsonToRoleList(result);
                     parseJsonToPage(result,selectCondition);
                 } else{
                     layer.msg(result.message,{icon:0,shift:6});
@@ -151,24 +146,22 @@
         });
     }
     //将服务器返回的json数据中的user信息转换为html格式的数据进行显示
-    function parseJsonToUserList(result) {
-        var userListHtml = "";
-        var userList = result.info.pageInfo.list;
-        $.each(userList,function (i,user) {
-            userListHtml+='<tr>';
-            userListHtml+='<td>'+(i+1)+'</td>';
-            userListHtml+='<td><input deleteId='+user.id+' class="aCheckbox" type="checkbox"></td>';
-            userListHtml+='<td>'+user.loginacct+'</td>';
-            userListHtml+='<td>'+user.username+'</td>';
-            userListHtml+='<td>'+user.email+'</td>';
-            userListHtml+='<td>';
-            userListHtml+=' <button type="button" onclick="window.location.href=\''+'${APP_PATH}/toAssignRolePage.htm?id='+user.id+'\'" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>';
-            userListHtml+=' <button type="button" onclick="window.location.href=\''+'${APP_PATH}/toUpdatePage.htm?id='+user.id+'\'" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>';
-            userListHtml+=' <button type="button" onclick="doDelete('+user.id+',\''+user.loginacct+'\')" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
-            userListHtml+='</td>';
-            userListHtml+='</tr>';
+    function parseJsonToRoleList(result) {
+        var roleListHtml = "";
+        var roleList = result.info.pageInfo.list;
+        $.each(roleList,function (i,role) {
+            roleListHtml+='<tr>';
+            roleListHtml+='<td>'+(i+1)+'</td>';
+            roleListHtml+='<td><input deleteId='+role.id+' class="aCheckbox" type="checkbox"></td>';
+            roleListHtml+='<td>'+role.name+'</td>';
+            roleListHtml+='<td>';
+            roleListHtml+=' <button type="button" onclick="window.location.href=\''+'${APP_PATH}/toAssignRolePage.htm?id='+role.id+'\'" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>';
+            roleListHtml+=' <button type="button" onclick="window.location.href=\''+'${APP_PATH}/role/toUpdatePage.htm?id='+role.id+'\'" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>';
+            roleListHtml+=' <button type="button" onclick="doDelete('+role.id+',\''+role.name+'\')" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
+            roleListHtml+='</td>';
+            roleListHtml+='</tr>';
         });
-        $("tbody").html(userListHtml);
+        $("tbody").html(roleListHtml);
     }
     //将服务器返回的json数据中的分页信息转换为html格式的数据进行显示
     function parseJsonToPage(result,selectCondition) {
@@ -198,19 +191,19 @@
         $(".pagination").html(pageHtml);
     }
 
-    //点击查询按钮，发送查询请求，局部刷新列表
+    //点击查询按钮，发送查询请求，局部刷新列表（模糊查询）
     $("#selectConditionBtn").click(function () {
         var selectCondition = $("#selectConditionText").val();
         loadUser(1,selectCondition);
     });
-    
-    //删除用户请求
-    function doDelete(id,loginacct) {
+
+    //删除角色请求
+    function doDelete(id,name) {
         var listLoading;
-        layer.confirm("确认删除账户【"+loginacct+"】吗？",  {icon: 3, title:'提示'}, function(cindex){
+        layer.confirm("确认删除账户【"+name+"】吗？",  {icon: 3, title:'提示'}, function(cindex){
             layer.close(cindex);
             $.ajax({
-                url:"${APP_PATH}/user/"+id+".do",
+                url:"${APP_PATH}/role/"+id+".do",
                 data:{
                     "_method":"delete"
                 },
@@ -223,7 +216,7 @@
                     layer.close(listLoading);
                     if (result.code==100){
                         layer.msg(result.message, {time:1500, icon:1, shift:6});
-                        window.location.href="${APP_PATH}/toUserPage.htm";
+                        window.location.href="${APP_PATH}/role/toRolePage.htm";
                     } else{
                         layer.msg(result.message,{icon:0,shift:6});
                     }
@@ -236,7 +229,6 @@
             layer.close(cindex);
         });
     }
-
     //为复选框添加全选全不选事件
     $("#allCheckbox").click(function () {
         $("tbody tr td input[type=checkbox]").prop("checked",$(this).prop("checked"));
@@ -252,19 +244,19 @@
             layer.msg("请选择要删除的用户！", {time:1500, icon:0, shift:6});
             return false;
         }
-        var id="";
-        $.each($(".aCheckbox:checked"),function () {
-            id+=$(this).attr("deleteId");
-            id+="-";
-        });
+
         var listLoading;
+        var jsonData = {
+            "_method":"delete"
+        }
+        $.each($(".aCheckbox:checked"),function (i,role) {
+            jsonData["ids["+i+"]"]=$(role).attr("deleteId")
+        });
         layer.confirm("确认删除账户这些用户吗？",  {icon: 3, title:'提示'}, function(cindex){
             layer.close(cindex);
             $.ajax({
-                url:"${APP_PATH}/user/"+id+".do",
-                data:{
-                    "_method":"delete"
-                },
+                url:"${APP_PATH}/roles.do",
+                data:jsonData,
                 type:"post",
                 beforeSend:function(){
                     listLoading = layer.load(2, {time: 10*1000});
@@ -274,7 +266,7 @@
                     layer.close(listLoading);
                     if (result.code==100){
                         layer.msg(result.message, {time:1500, icon:1, shift:6});
-                        window.location.href="${APP_PATH}/toUserPage.htm";
+                        window.location.href="${APP_PATH}/role/toRolePage.htm";
                     } else{
                         layer.msg(result.message,{icon:0,shift:6});
                     }

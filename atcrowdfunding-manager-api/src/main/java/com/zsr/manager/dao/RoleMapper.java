@@ -1,6 +1,9 @@
 package com.zsr.manager.dao;
 
 import com.zsr.bean.Role;
+import com.zsr.utils.VO;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 public interface RoleMapper {
@@ -13,4 +16,8 @@ public interface RoleMapper {
     List<Role> selectAll();
 
     int updateByPrimaryKey(Role record);
+
+    List<Role> getRolesByNameLike(String selectCondition);
+
+    int deleteRoles(@Param("vo") VO vo);
 }
