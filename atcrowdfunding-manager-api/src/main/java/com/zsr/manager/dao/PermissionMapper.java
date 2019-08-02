@@ -13,4 +13,8 @@ public interface PermissionMapper {
     List<Permission> selectAll();
 
     int updateByPrimaryKey(Permission record);
+
+    Permission getRootPermission();
+
+    List<Permission> getChildrenPermissionByPid(Integer id);
 }

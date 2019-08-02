@@ -28,7 +28,17 @@
             <div><a class="navbar-brand" style="font-size:32px;" href="user.html">众筹平台 - 角色维护</a></div>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <jsp:include page="/WEB-INF/jsp/common/userInfoHead.jsp"></jsp:include>
+            <ul class="nav navbar-nav navbar-right">
+                <jsp:include page="/WEB-INF/jsp/common/userInfoHead.jsp"></jsp:include>
+                <li style="margin-left:10px;padding-top:8px;">
+                    <button type="button" class="btn btn-default btn-danger">
+                        <span class="glyphicon glyphicon-question-sign"></span> 帮助
+                    </button>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="查询">
+            </form>
         </div>
     </div>
 </nav>

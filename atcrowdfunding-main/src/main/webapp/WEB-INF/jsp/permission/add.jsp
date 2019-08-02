@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh_CN">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,7 +25,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
-            <div><a class="navbar-brand" style="font-size:32px;" href="user.html">众筹平台 - 用户维护</a></div>
+            <div><a class="navbar-brand" style="font-size:32px;" href="user.html">众筹平台 - 许可维护</a></div>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
@@ -54,36 +53,53 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <ol class="breadcrumb">
                 <li><a href="${APP_PATH}/main.htm">首页</a></li>
-                <li><a href="${APP_PATH}/toUserPage.htm">数据列表</a></li>
-                <li class="active">角色分配</li>
+                <li><a href="${APP_PATH}/permission/toPermissionPage.htm">许可树</a></li>
+                <li class="active">添加</li>
             </ol>
             <div class="panel panel-default">
+                <div class="panel-heading">表单数据<div style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-question-sign"></i></div></div>
                 <div class="panel-body">
-                    <form role="form" class="form-inline">
+                    <form id="addForm" role="form">
                         <div class="form-group">
-                            <label for="exampleInputPassword1">未分配角色列表</label><br>
-                            <select id="leftSelect" class="form-control" multiple size="10" style="width:250px;overflow-y:auto;">
-
-                                <c:forEach items="${notAssignList}" var="role">
-                                    <option value="${role.id}">${role.name}</option>
-                                </c:forEach>
-                            </select>
+                            <label for="fname">许可名称</label>
+                            <input type="text" class="form-control" id="fname" placeholder="请输入许可名称">
+                            <p id="loginacctTip" class="help-block label label-warning"></p>
                         </div>
                         <div class="form-group">
-                            <ul>
-                                <li id="leftToRightBtn" class="btn btn-default glyphicon glyphicon-chevron-right"></li>
-                                <br>
-                                <li id="RightToLeftBtn" class="btn btn-default glyphicon glyphicon-chevron-left" style="margin-top:20px;"></li>
-                            </ul>
+                            <label for="furl">许可URL</label>
+                            <input type="text" class="form-control" id="furl" placeholder="请输入许可URL">
+                            <p id="emailTip" class="help-block label label-warning"></p>
                         </div>
-                        <div class="form-group" style="margin-left:40px;">
-                            <label for="exampleInputPassword1">已分配角色列表</label><br>
-                            <select  id="rightSelect" class="form-control" multiple size="10" style="width:250px;overflow-y:auto;">
-                                <c:forEach items="${assignList}" var="role">
-                                    <option value="${role.id}">${role.name}</option>
-                                </c:forEach>
+                        <div class="form-group">
+                            <label for="ficon">许可图标</label>
+                            <div class="alert alert-danger" role="alert" style="width: 250px; font-size: 18px">
+                                <span id="showicon" class=" glyphicon glyphicon-arrow-down " aria-hidden="true">  请选择许可图标</span>
+                            </div>
+                            <select style="width: 350px" type="radio" class="form-control" id="ficon" placeholder="请选择许可图标">
+                                <option>glyphicon glyphicon-th-list</option>
+                                <option>glyphicon glyphicon-dashboard</option>
+                                <option>glyphicon glyphicon glyphicon-tasks</option>
+                                <option>glyphicon glyphicon-user</option>
+                                <option>glyphicon glyphicon-king</option>
+                                <option>glyphicon glyphicon-lock</option>
+                                <option>glyphicon glyphicon-ok</option>
+                                <option>glyphicon glyphicon-check</option>
+                                <option>glyphicon glyphicon-check</option>
+                                <option>glyphicon glyphicon-check</option>
+                                <option>glyphicon glyphicon-th-large</option>
+                                <option>glyphicon glyphicon-picture</option>
+                                <option>glyphicon glyphicon-equalizer</option>
+                                <option>glyphicon glyphicon-random</option>
+                                <option>glyphicon glyphicon-hdd</option>
+                                <option>glyphicon glyphicon-comment</option>
+                                <option>glyphicon glyphicon-list</option>
+                                <option>glyphicon glyphicon-tags</option>
+                                <option>glyphicon glyphicon-list-alt</option>
                             </select>
+                            <p id="usernameTip" class="help-block label label-warning"></p>
                         </div>
+                        <button type="button" id="addBtn" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> 新增</button>
+                        <button type="button" id="resetBtn" class="btn btn-danger"><i class="glyphicon glyphicon-refresh"></i> 重置</button>
                     </form>
                 </div>
             </div>
@@ -133,33 +149,30 @@
             }
         });
     });
-
-    //分配角色
-    $("#leftToRightBtn").click(function () {
-        var left = $("#leftSelect option:selected");
-        if (left.length==0){
-            layer.msg("请选择你要分配的角色！",{icon:0,shift:6});
-            return false;
-        }
-        var ajaxObj={};
+    //点击按钮，发送添加请求
+    $("#addBtn").click(function () {
+        var fname = $("#fname");
+        var ficon = $("#ficon");
+        var furl = $("#furl");
         var listLoading;
-        $.each(left,function (i,role) {
-            ajaxObj["ids["+i+"]"]=role.value;
-        });
         $.ajax({
-            url:"${APP_PATH}/user/assignRoleToUser/${userId}.do",
-            data:ajaxObj,
+            url:"${APP_PATH}/permission.do",
+            data:{
+                "pid":"${param.id}",
+                "name":fname.val(),
+                "icon":ficon.val(),
+                "url":furl.val()
+            },
             type:"post",
-            beforeSend:function () {
+            beforeSend:function(){
                 listLoading = layer.load(2, {time: 10*1000});
                 return true;
             },
             success:function (result) {
                 layer.close(listLoading);
                 if (result.code==100){
-                    $("#rightSelect").append(left);
-                    $("#rightSelect option").prop("selected",false);
                     layer.msg(result.message, {time:1500, icon:1, shift:6});
+                    window.location.href="${APP_PATH}/permission/toPermissionPage.htm";
                 } else{
                     layer.msg(result.message,{icon:0,shift:6});
                 }
@@ -169,43 +182,16 @@
             }
         });
     });
-    //移除角色
-    $("#RightToLeftBtn").click(function () {
-        var right = $("#rightSelect option:selected");
-        if (right.length==0){
-            layer.msg("请选择你要移除的角色！",{icon:0,shift:6});
-            return false;
-        }
-        var ajaxObj={};
-        var listLoading;
-        $.each(right,function (i,role) {
-            ajaxObj["ids["+i+"]"]=role.value;
-            alert(role.value)
-        });
-        ajaxObj["_method"]="delete";
-        $.ajax({
-            url:"${APP_PATH}/user/removeRoleToUser/${userId}.do",
-            data:ajaxObj,
-            type:"post",
-            beforeSend:function () {
-                listLoading = layer.load(2, {time: 10*1000});
-                return true;
-            },
-            success:function (result) {
-                layer.close(listLoading);
-                if (result.code==100){
-                    $("#leftSelect").append(right);
-                    $("#leftSelect option").prop("selected",false);
-                    layer.msg(result.message, {time:1500, icon:1, shift:6});
-                } else{
-                    layer.msg(result.message,{icon:0,shift:6});
-                }
-            },
-            error:function () {
-                layer.msg("请求错误！",{icon:0,shift:6});
-            }
-        })
+    //重置表单
+    $("#resetBtn").click(function () {
+        $("#addForm")[0].reset();
+    });
+
+    $("#ficon").change(function () {
+        $("#showicon").removeClass();
+        $("#showicon").addClass($(this).val());
     });
 </script>
 </body>
 </html>
+
