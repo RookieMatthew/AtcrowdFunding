@@ -101,14 +101,14 @@
                 if ( treeNode.level == 0 ) {
                     s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;" onclick="window.location.href=\'${APP_PATH}/permission/toAddPage.htm?id='+treeNode.id+'\'" href="#" >&nbsp;&nbsp;<i class="fa fa-fw fa-plus rbg "></i></a>';
                 } else if ( treeNode.level == 1 ) {
-                    s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;"  href="#" title="修改权限信息">&nbsp;&nbsp;<i class="fa fa-fw fa-edit rbg "></i></a>';
+                    s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;"  onclick="window.location.href=\'${APP_PATH}/permission/toUpdatePage.htm?id='+treeNode.id+'\'"  href="#" title="修改权限信息">&nbsp;&nbsp;<i class="fa fa-fw fa-edit rbg "></i></a>';
                     if (treeNode.children.length == 0) {
-                        s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;" href="#" >&nbsp;&nbsp;<i class="fa fa-fw fa-times rbg "></i></a>';
+                        s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;" onclick="doDelete ('+treeNode.id+',\''+treeNode.name+'\');" href="#" >&nbsp;&nbsp;<i class="fa fa-fw fa-times rbg "></i></a>';
                     }
                     s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;" onclick="window.location.href=\'${APP_PATH}/permission/toAddPage.htm?id='+treeNode.id+'\'" href="#" >&nbsp;&nbsp;<i class="fa fa-fw fa-plus rbg "></i></a>';
                 } else if ( treeNode.level == 2 ) {
-                    s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;"  href="#" title="修改权限信息">&nbsp;&nbsp;<i class="fa fa-fw fa-edit rbg "></i></a>';
-                    s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;" href="#">&nbsp;&nbsp;<i class="fa fa-fw fa-times rbg "></i></a>';
+                    s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;" onclick="window.location.href=\'${APP_PATH}/permission/toUpdatePage.htm?id='+treeNode.id+'\'"  href="#" title="修改权限信息">&nbsp;&nbsp;<i class="fa fa-fw fa-edit rbg "></i></a>';
+                    s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;" onclick="doDelete ('+treeNode.id+',\''+treeNode.name+'\');" href="#">&nbsp;&nbsp;<i class="fa fa-fw fa-times rbg "></i></a>';
                 }
 
                 s += '</span>';
@@ -140,6 +140,39 @@
             layer.msg("请求错误！",{icon:0,shift:6});
         }
     });
+
+    //删除许可请求
+    function doDelete(id,name) {
+        var listLoading;
+        layer.confirm("确认删除许可【"+name+"】吗？",  {icon: 3, title:'提示'}, function(cindex){
+            layer.close(cindex);
+            $.ajax({
+                url:"${APP_PATH}/permission/"+id+".do",
+                data:{
+                    "_method":"delete"
+                },
+                type:"post",
+                beforeSend:function(){
+                    listLoading = layer.load(2, {time: 10*1000});
+                    return true;
+                },
+                success:function (result) {
+                    layer.close(listLoading);
+                    if (result.code==100){
+                        layer.msg(result.message, {time:1500, icon:1, shift:6});
+                        window.location.href="${APP_PATH}/permission/toPermissionPage.htm";
+                    } else{
+                        layer.msg(result.message,{icon:0,shift:6});
+                    }
+                },
+                error:function () {
+                    layer.msg("请求错误！",{icon:0,shift:6});
+                }
+            });
+        }, function(cindex){
+            layer.close(cindex);
+        });
+    }
 </script>
 </body>
 </html>

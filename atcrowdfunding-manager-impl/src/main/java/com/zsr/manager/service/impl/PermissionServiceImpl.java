@@ -40,4 +40,19 @@ public class PermissionServiceImpl implements PermissionService {
     public int addPermission(Permission permission) {
         return permissionMapper.insert(permission);
     }
+
+    @Override
+    public Permission getPermissionById(Integer id) {
+        return permissionMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public int updatePermission(Permission permission) {
+        return permissionMapper.updateByPrimaryKey(permission);
+    }
+
+    @Override
+    public int deletePermission(Integer id) {
+        return permissionMapper.deleteByPrimaryKey(id);
+    }
 }

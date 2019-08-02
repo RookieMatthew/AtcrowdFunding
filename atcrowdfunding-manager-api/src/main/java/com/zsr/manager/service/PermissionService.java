@@ -33,4 +33,22 @@ public interface PermissionService {
      * @return 影响数据库行数
      * */
     int addPermission(Permission permission);
+    /**
+     * 查询许可树的某个节点
+     * @param id 要查询的节点id
+     * @return 查询到的节点
+     * */
+    Permission getPermissionById(Integer id);
+    /**
+     * 修改许可树的节点
+     * @param permission 修改后的节点
+     * @return 影响数据库行数
+     * */
+    int updatePermission(Permission permission);
+    /**
+     * 删除许可树的节点
+     * @param id 要删除节点的id
+     * @return 影响数据库行数
+     * */
+    int deletePermission(Integer id);
 }

@@ -7,7 +7,9 @@ import com.zsr.utils.Const;
 import com.zsr.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
@@ -44,7 +46,7 @@ public class PermissionController {
      * 得到许可树的节点数据
      * */
     @ResponseBody
-    @RequestMapping("/permission/getNodeData")
+    @RequestMapping(value = "/permission/getNodeData",method = RequestMethod.GET)
     public Message getNodeData(){
         try {
             Permission rootPermission = null;
@@ -88,7 +90,7 @@ public class PermissionController {
      * 响应许可添加请求
      * */
     @ResponseBody
-    @RequestMapping("/permission")
+    @RequestMapping(value = "/permission",method = RequestMethod.POST)
     public Message addPermission(Permission permission){
         try {
             permissionService.addPermission(permission);
@@ -96,6 +98,50 @@ public class PermissionController {
         }catch (Exception e){
             e.printStackTrace();
             return Message.fail("添加许可失败！");
+        }
+    }
+
+    /**
+     * 跳转到修改页面，并回显数据
+     * */
+    @RequestMapping("/permission/toUpdatePage")
+    public String toUpdatePage(HttpSession session,Integer id,Map map){
+        User user = (User) session.getAttribute(Const.LOGIN_USER);
+        if (user==null){
+            return "redirect:/login.htm";
+        }
+        Permission permission = permissionService.getPermissionById(id);
+        map.put("permission",permission);
+        return "permission/edit";
+    }
+
+    /**
+     * 响应许可修改请求
+     * */
+    @ResponseBody
+    @RequestMapping(value = "/permission/{id}",method = RequestMethod.PUT)
+    public Message updatePermission(Permission permission){
+        try {
+            permissionService.updatePermission(permission);
+            return Message.success();
+        }catch (Exception e){
+            e.printStackTrace();
+            return Message.fail("修改许可失败！");
+        }
+    }
+
+    /**
+     * 响应许可删除请求
+     * */
+    @ResponseBody
+    @RequestMapping(value = "/permission/{id}",method = RequestMethod.DELETE)
+    public Message deletePermission(@PathVariable("id") Integer id){
+        try {
+            permissionService.deletePermission(id);
+            return Message.success();
+        }catch (Exception e){
+            e.printStackTrace();
+            return Message.fail("修改许可失败！");
         }
     }
 }
