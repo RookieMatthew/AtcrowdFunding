@@ -121,25 +121,28 @@
         }
     };
 
-    var listLoading;
-    $.ajax({
-        url:"${APP_PATH}/permission/getNodeData.do",
-        type:"get",
-        beforeSend:function(){
-            listLoading = layer.load(2, {time: 10*1000});
-        },
-        success:function (result) {
-            layer.close(listLoading);
-            if (result.code==100){
-                $.fn.zTree.init($("#treeDemo"), setting, result.info.zNodes)
-            } else {
-                layer.msg(result.message,{icon:0,shift:6});
+    loadTree();
+    function loadTree(){
+        var listLoading;
+        $.ajax({
+            url:"${APP_PATH}/permission/getNodeData.do",
+            type:"get",
+            beforeSend:function(){
+                listLoading = layer.load(2, {time: 10*1000});
+            },
+            success:function (result) {
+                layer.close(listLoading);
+                if (result.code==100){
+                    $.fn.zTree.init($("#treeDemo"), setting, result.info.zNodes)
+                } else {
+                    layer.msg(result.message,{icon:0,shift:6});
+                }
+            },
+            error:function () {
+                layer.msg("请求错误！",{icon:0,shift:6});
             }
-        },
-        error:function () {
-            layer.msg("请求错误！",{icon:0,shift:6});
-        }
-    });
+        });
+    }
 
     //删除许可请求
     function doDelete(id,name) {
@@ -160,7 +163,7 @@
                     layer.close(listLoading);
                     if (result.code==100){
                         layer.msg(result.message, {time:1500, icon:1, shift:6});
-                        window.location.href="${APP_PATH}/permission/toPermissionPage.htm";
+                        loadTree();
                     } else{
                         layer.msg(result.message,{icon:0,shift:6});
                     }

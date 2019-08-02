@@ -4,7 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zsr.bean.Role;
 import com.zsr.utils.Const;
-import com.zsr.utils.Message;
+import com.zsr.utils.AjaxMessage;
 import com.zsr.bean.User;
 import com.zsr.manager.service.UserService;
 import com.zsr.utils.VO;
@@ -47,8 +47,8 @@ public class UserController {
      */
     @RequestMapping(value = "/users",method = RequestMethod.GET)
     @ResponseBody
-    public Message userList(@RequestParam(value = "pn",defaultValue = "1") Integer pn,
-                            @RequestParam(value = "selectCondition",defaultValue = "") String selectCondition){
+    public AjaxMessage userList(@RequestParam(value = "pn",defaultValue = "1") Integer pn,
+                                @RequestParam(value = "selectCondition",defaultValue = "") String selectCondition){
         List<User> users;
         try {
             PageHelper.startPage(pn,15);
@@ -58,10 +58,10 @@ public class UserController {
                 users = userService.getUsersByAcctLike(selectCondition);
             }
             PageInfo pageInfo = new PageInfo(users,7);
-            return Message.success().addInfo("pageInfo",pageInfo);
+            return AjaxMessage.success().addInfo("pageInfo",pageInfo);
         }catch (Exception e){
             e.printStackTrace();
-            return Message.fail("用户信息加载失败！");
+            return AjaxMessage.fail("用户信息加载失败！");
         }
     }
 
@@ -83,13 +83,13 @@ public class UserController {
      */
     @RequestMapping(value = "/user",method = RequestMethod.POST)
     @ResponseBody
-    public Message addUser(User user){
+    public AjaxMessage addUser(User user){
         try {
             userService.addUser(user);
-            return Message.success("用户添加成功！");
+            return AjaxMessage.success("用户添加成功！");
         }catch (Exception e){
             e.printStackTrace();
-            return Message.fail("用户添加失败！");
+            return AjaxMessage.fail("用户添加失败！");
         }
     }
 
@@ -112,14 +112,14 @@ public class UserController {
      * */
     @RequestMapping(value = "/user/{id}",method = RequestMethod.PUT)
     @ResponseBody
-    public Message updateUser(User user){
+    public AjaxMessage updateUser(User user){
         try {
             userService.updateUser(user);
         }catch (Exception e){
             e.printStackTrace();
-            return Message.fail("更新信息失败!");
+            return AjaxMessage.fail("更新信息失败!");
         }
-        return Message.success("更新信息成功!");
+        return AjaxMessage.success("更新信息成功!");
     }
 
     /**
@@ -127,7 +127,7 @@ public class UserController {
      * */
     @RequestMapping(value = "/user/{id}",method = RequestMethod.DELETE)
     @ResponseBody
-    public Message deleteUser(@PathVariable String id){
+    public AjaxMessage deleteUser(@PathVariable String id){
         try {
             if (!id.contains("-")){
                 userService.deleteUser(Integer.parseInt(id));
@@ -137,9 +137,9 @@ public class UserController {
             }
         }catch (Exception e){
             e.printStackTrace();
-            return Message.fail("删除用户失败!");
+            return AjaxMessage.fail("删除用户失败!");
         }
-        return Message.success("删除用户成功!");
+        return AjaxMessage.success("删除用户成功!");
     }
 
 
@@ -173,14 +173,14 @@ public class UserController {
     * */
    @RequestMapping(value = "/user/assignRoleToUser/{userId}",method = RequestMethod.POST)
    @ResponseBody
-   public Message assignRoleToUser(@PathVariable String userId, VO vo){
+   public AjaxMessage assignRoleToUser(@PathVariable String userId, VO vo){
        try {
            userService.assignRoleToUser(userId,vo);
        }catch (Exception e){
            e.printStackTrace();
-           return Message.fail("角色分配失败！");
+           return AjaxMessage.fail("角色分配失败！");
        }
-      return Message.success("角色分配成功");
+      return AjaxMessage.success("角色分配成功");
    }
 
     /**
@@ -188,15 +188,15 @@ public class UserController {
      * */
     @RequestMapping(value = "/user/removeRoleToUser/{userId}",method = RequestMethod.DELETE)
     @ResponseBody
-    public Message removeRoleToUser(@PathVariable String userId, VO vo){
+    public AjaxMessage removeRoleToUser(@PathVariable String userId, VO vo){
         System.out.println(vo.ids);
         System.out.println(userId);
         try {
             userService.removeRoleToUser(userId,vo);
         }catch (Exception e){
             e.printStackTrace();
-            return Message.fail("角色分配失败！");
+            return AjaxMessage.fail("角色分配失败！");
         }
-        return Message.success("角色分配成功");
+        return AjaxMessage.success("角色分配成功");
     }
 }

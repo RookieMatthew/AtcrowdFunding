@@ -165,7 +165,7 @@
             roleListHtml+='<td><input deleteId='+role.id+' class="aCheckbox" type="checkbox"></td>';
             roleListHtml+='<td>'+role.name+'</td>';
             roleListHtml+='<td>';
-            roleListHtml+=' <button type="button" onclick="window.location.href=\''+'${APP_PATH}/toAssignRolePage.htm?id='+role.id+'\'" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>';
+            roleListHtml+=' <button type="button" onclick="window.location.href=\''+'${APP_PATH}/role/toAssignPermissionPage.htm?id='+role.id+'\'" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>';
             roleListHtml+=' <button type="button" onclick="window.location.href=\''+'${APP_PATH}/role/toUpdatePage.htm?id='+role.id+'\'" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>';
             roleListHtml+=' <button type="button" onclick="doDelete('+role.id+',\''+role.name+'\')" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
             roleListHtml+='</td>';

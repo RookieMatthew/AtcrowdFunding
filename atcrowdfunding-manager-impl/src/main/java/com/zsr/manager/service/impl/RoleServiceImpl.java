@@ -54,4 +54,10 @@ public class RoleServiceImpl implements RoleService {
     public void updateRole(Role role) {
         roleMapper.updateByPrimaryKey(role);
     }
+
+    @Override
+    public void assignPermissionForRole(Integer roleid, VO vo) {
+        roleMapper.deleteAllPermission(roleid);
+        roleMapper.assignPermissionForRole(roleid,vo);
+    }
 }

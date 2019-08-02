@@ -16,6 +16,10 @@ public class Permission {
 
     private boolean open;
 
+    private boolean checked;
+
+    private Integer level;
+
     private List<Permission> children=new ArrayList<>();
 
     public Integer getId() {
@@ -72,5 +76,21 @@ public class Permission {
 
     public void setChildren(List<Permission> children) {
         this.children = children;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 }

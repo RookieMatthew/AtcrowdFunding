@@ -4,7 +4,7 @@ import com.zsr.bean.Permission;
 import com.zsr.bean.User;
 import com.zsr.manager.service.PermissionService;
 import com.zsr.utils.Const;
-import com.zsr.utils.Message;
+import com.zsr.utils.AjaxMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +47,7 @@ public class PermissionController {
      * */
     @ResponseBody
     @RequestMapping(value = "/permission/getNodeData",method = RequestMethod.GET)
-    public Message getNodeData(){
+    public AjaxMessage getNodeData(){
         try {
             Permission rootPermission = null;
             List<Permission> allPermissions = permissionService.getAllPermissions();
@@ -67,10 +67,10 @@ public class PermissionController {
                     parent.getChildren().add(allPermission);
                 }
             }
-            return Message.success().addInfo("zNodes",rootPermission);
+            return AjaxMessage.success().addInfo("zNodes",rootPermission);
         }catch (Exception e){
             e.printStackTrace();
-            return Message.fail("许可树加载失败！");
+            return AjaxMessage.fail("许可树加载失败！");
         }
     }
 
@@ -91,13 +91,13 @@ public class PermissionController {
      * */
     @ResponseBody
     @RequestMapping(value = "/permission",method = RequestMethod.POST)
-    public Message addPermission(Permission permission){
+    public AjaxMessage addPermission(Permission permission){
         try {
             permissionService.addPermission(permission);
-            return Message.success();
+            return AjaxMessage.success();
         }catch (Exception e){
             e.printStackTrace();
-            return Message.fail("添加许可失败！");
+            return AjaxMessage.fail("添加许可失败！");
         }
     }
 
@@ -120,13 +120,13 @@ public class PermissionController {
      * */
     @ResponseBody
     @RequestMapping(value = "/permission/{id}",method = RequestMethod.PUT)
-    public Message updatePermission(Permission permission){
+    public AjaxMessage updatePermission(Permission permission){
         try {
             permissionService.updatePermission(permission);
-            return Message.success();
+            return AjaxMessage.success();
         }catch (Exception e){
             e.printStackTrace();
-            return Message.fail("修改许可失败！");
+            return AjaxMessage.fail("修改许可失败！");
         }
     }
 
@@ -135,13 +135,45 @@ public class PermissionController {
      * */
     @ResponseBody
     @RequestMapping(value = "/permission/{id}",method = RequestMethod.DELETE)
-    public Message deletePermission(@PathVariable("id") Integer id){
+    public AjaxMessage deletePermission(@PathVariable("id") Integer id){
         try {
             permissionService.deletePermission(id);
-            return Message.success();
+            return AjaxMessage.success();
         }catch (Exception e){
             e.printStackTrace();
-            return Message.fail("修改许可失败！");
+            return AjaxMessage.fail("修改许可失败！");
         }
+    }
+
+
+    /**
+     * 得到许可树的节点数据(树异步加载)
+     * */
+    @ResponseBody
+    @RequestMapping(value = "/permission/loadDataAsync",method = RequestMethod.GET)
+    public Object loadDataAsync(Integer roleid){
+            Permission rootPermission = null;
+            List<Permission> allPermissions = permissionService.getAllPermissions();
+            List<Integer> assignedPermissionIds = permissionService.getAssignedPermissionIdsByRoleId(roleid);
+            Map<Integer,Permission> map = new HashMap<>(allPermissions.size());
+            for (Permission allPermission : allPermissions) {
+                map.put(allPermission.getId(),allPermission);
+                allPermission.setOpen(true);
+                if (assignedPermissionIds.contains(allPermission.getId())){
+                    allPermission.setChecked(true);
+                }
+            }
+            rootPermission = map.get(0);
+            for (Permission allPermission : allPermissions) {
+                if (allPermission.getPid()==0){
+                    rootPermission = allPermission;
+                }else{
+                    //得到当前节点的父亲节点
+                    Permission parent = map.get(allPermission.getPid());
+                    //将该节点加入父亲节点的子节点
+                    parent.getChildren().add(allPermission);
+                }
+            }
+            return rootPermission;
     }
 }

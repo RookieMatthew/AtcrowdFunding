@@ -4,7 +4,7 @@ import com.zsr.bean.User;
 import com.zsr.manager.service.UserService;
 import com.zsr.utils.Const;
 import com.zsr.utils.MD5Util;
-import com.zsr.utils.Message;
+import com.zsr.utils.AjaxMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -88,7 +88,7 @@ public class DispatchController {
      */
     @ResponseBody
     @RequestMapping("/doLogin")
-    public Message doLogin(String loginacct, String userpswd, String usertype, HttpSession session){
+    public AjaxMessage doLogin(String loginacct, String userpswd, String usertype, HttpSession session){
         try {
             HashMap<String, Object> paramMap = new HashMap<>(5);
             paramMap.put("loginacct",loginacct);
@@ -97,14 +97,14 @@ public class DispatchController {
             User user = userService.queryUserLogin(paramMap);
             session.setAttribute(Const.LOGIN_USER,user);
         }catch (Exception e){
-            return Message.fail("登陆失败！");
+            return AjaxMessage.fail("登陆失败！");
         }
-        return Message.success("登陆成功！");
+        return AjaxMessage.success("登陆成功！");
     }
 
     @ResponseBody
     @RequestMapping("/test")
-    public Message test(){
-        return Message.success();
+    public AjaxMessage test(){
+        return AjaxMessage.success();
     }
 }

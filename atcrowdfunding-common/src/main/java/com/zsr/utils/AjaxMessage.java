@@ -12,7 +12,7 @@ import java.util.Map;
  * @author shourenzhang
  * @date 2019/7/28 13:47
  */
-public class Message {
+public class AjaxMessage {
     /**
      * 状态码
      * 成功：100
@@ -31,35 +31,35 @@ public class Message {
      */
     private Map<String,Object> info = new HashMap<>();
 
-    public static Message success(){
-        Message result = new Message();
+    public static AjaxMessage success(){
+        AjaxMessage result = new AjaxMessage();
         result.setCode(100);
         result.setMessage("成功");
         return result;
     }
 
-    public static Message fail(){
-        Message result = new Message();
+    public static AjaxMessage fail(){
+        AjaxMessage result = new AjaxMessage();
         result.setCode(200);
         result.setMessage("失败！");
         return result;
     }
 
-    public static Message success(String successMessage){
-        Message result = new Message();
+    public static AjaxMessage success(String successMessage){
+        AjaxMessage result = new AjaxMessage();
         result.setCode(100);
         result.setMessage(successMessage);
         return result;
     }
 
-    public static Message fail(String failMessage){
-        Message result = new Message();
+    public static AjaxMessage fail(String failMessage){
+        AjaxMessage result = new AjaxMessage();
         result.setCode(200);
         result.setMessage(failMessage);
         return result;
     }
 
-    public Message addInfo(String key,Object value){
+    public AjaxMessage addInfo(String key, Object value){
         this.getInfo().put(key,value);
         return this;
     }

@@ -51,4 +51,10 @@ public interface RoleService {
      * @param  role 要更新的角色信息
      * */
     void updateRole(Role role);
+    /**
+     * 为某个角色分配许可
+     * @param  roleid 角色id
+     * @param vo 封装要分配的id集合
+     * */
+    void assignPermissionForRole(Integer roleid, VO vo);
 }

@@ -38,4 +38,14 @@
       #{roleId}
     </foreach>
   </delete>
+
+  <delete id="deleteAllPermission" parameterType="int">
+    delete from t_role_permission where roleid=#{roleid}
+  </delete>
+
+  <insert id="assignPermissionForRole" >
+    <foreach collection="vo.ids" separator=";" item="permissionid">
+      insert into t_role_permission(roleid,permissionid) values(#{roleid},#{permissionid})
+    </foreach>
+  </insert>
 </mapper>

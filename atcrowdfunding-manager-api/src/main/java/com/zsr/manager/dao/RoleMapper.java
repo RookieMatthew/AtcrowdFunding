@@ -20,4 +20,8 @@ public interface RoleMapper {
     List<Role> getRolesByNameLike(String selectCondition);
 
     int deleteRoles(@Param("vo") VO vo);
+
+    void deleteAllPermission(Integer roleid);
+
+    void assignPermissionForRole(@Param("roleid") Integer roleid,@Param("vo") VO vo);
 }

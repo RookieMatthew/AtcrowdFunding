@@ -180,7 +180,6 @@
         var listLoading;
         $.each(right,function (i,role) {
             ajaxObj["ids["+i+"]"]=role.value;
-            alert(role.value)
         });
         ajaxObj["_method"]="delete";
         $.ajax({

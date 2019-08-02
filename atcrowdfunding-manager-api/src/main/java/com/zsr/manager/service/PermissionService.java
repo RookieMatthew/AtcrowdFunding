@@ -51,4 +51,10 @@ public interface PermissionService {
      * @return 影响数据库行数
      * */
     int deletePermission(Integer id);
+    /**
+     * 通过角色id查询该角色已分配的权限id
+     * @param roleid 要查询的角色id
+     * @return 所有的已分配权限id
+     * */
+    List<Integer> getAssignedPermissionIdsByRoleId(Integer roleid);
 }

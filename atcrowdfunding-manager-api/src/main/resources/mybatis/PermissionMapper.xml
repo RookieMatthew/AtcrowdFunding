@@ -44,4 +44,9 @@
     select id, pid, name, icon, url
     from t_permission where pid=#{id}
   </select>
+
+  <select id="getAssignedPermissionIdsByRoleId" resultType="int" parameterType="int">
+    select permissionid
+    from t_role_permission where roleid=#{roleid}
+  </select>
 </mapper>
