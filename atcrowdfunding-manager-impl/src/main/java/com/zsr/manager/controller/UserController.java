@@ -34,11 +34,7 @@ public class UserController {
      * 仅用于跳转到user.jsp
      * */
     @RequestMapping("/toUserPage")
-    public String toUserPage(HttpSession session){
-        User user = (User) session.getAttribute(Const.LOGIN_USER);
-        if (user==null){
-            return "redirect:/login.htm";
-        }
+    public String toUserPage(){
         return "user/user";
     }
 
@@ -70,11 +66,7 @@ public class UserController {
      * 仅用于跳转到user.jsp
      * */
     @RequestMapping("/toAddPage")
-    public String toAddPage(HttpSession session){
-        User user = (User) session.getAttribute(Const.LOGIN_USER);
-        if (user==null){
-            return "redirect:/login.htm";
-        }
+    public String toAddPage(){
         return "user/add";
     }
 
@@ -97,11 +89,7 @@ public class UserController {
      * 跳转到edit.jsp,并查询所要回显的数据
      * */
     @RequestMapping("/toUpdatePage")
-    public String toUpdatePage(HttpSession session, Integer id, Model model){
-        User user = (User) session.getAttribute(Const.LOGIN_USER);
-        if (user==null){
-            return "redirect:/login.htm";
-        }
+    public String toUpdatePage(Integer id, Model model){
         User updateUser = userService.getUserById(id);
         model.addAttribute("user",updateUser);
         return "user/edit";
@@ -147,11 +135,7 @@ public class UserController {
      * 跳转到用户角色分配页面assignRole.jsp
      * */
     @RequestMapping("/toAssignRolePage")
-    public String toAssignRolePage(HttpSession session, Integer id, Map map){
-        User user = (User) session.getAttribute(Const.LOGIN_USER);
-        if (user==null){
-            return "redirect:/login.htm";
-        }
+    public String toAssignRolePage(Integer id, Map map){
         List<Role> allRoleList = userService.queryAllRole();
         List<Integer> userRoleIdList = userService.queryRoleIdByUserId(id);
         List<Role> assignList = new ArrayList<>();

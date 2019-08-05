@@ -31,11 +31,7 @@ public class RoleController {
      * 仅用于跳转到角色列表role.jsp
      * */
     @RequestMapping("role/toRolePage")
-    public String toUserPage(HttpSession session){
-        User user = (User) session.getAttribute(Const.LOGIN_USER);
-        if (user==null){
-            return "redirect:/login.htm";
-        }
+    public String toUserPage(){
         return "role/role";
     }
 
@@ -66,11 +62,7 @@ public class RoleController {
      * 仅用于跳转到角色添加
      * */
     @RequestMapping("role/toAddPage")
-    public String toAddPage(HttpSession session){
-        User user = (User) session.getAttribute(Const.LOGIN_USER);
-        if (user==null){
-            return "redirect:/login.htm";
-        }
+    public String toAddPage(){
         return "role/add";
     }
 
@@ -93,11 +85,7 @@ public class RoleController {
      * 跳转到角色编辑页面,并查询所要回显的数据
      * */
     @RequestMapping("/role/toUpdatePage")
-    public String toUpdatePage(HttpSession session, Integer id, Model model){
-        User user = (User) session.getAttribute(Const.LOGIN_USER);
-        if (user==null){
-            return "redirect:/login.htm";
-        }
+    public String toUpdatePage( Integer id, Model model){
         Role updateRole = roleService.getRoleById(id);
         model.addAttribute("role",updateRole);
         return "role/edit";
@@ -150,11 +138,7 @@ public class RoleController {
      * 仅用于跳转到许可分配页面
      * */
     @RequestMapping("/role/toAssignPermissionPage")
-    public String toAssignPermissionPage(HttpSession session){
-        User user = (User) session.getAttribute(Const.LOGIN_USER);
-        if (user==null){
-            return "redirect:/login.htm";
-        }
+    public String toAssignPermissionPage(){
         return "role/assignPermission";
     }
 

@@ -1,9 +1,7 @@
 package com.zsr.manager.controller;
 
 import com.zsr.bean.Permission;
-import com.zsr.bean.User;
 import com.zsr.manager.service.PermissionService;
-import com.zsr.utils.Const;
 import com.zsr.utils.AjaxMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,11 +30,7 @@ public class PermissionController {
      * 仅用于跳转到许可模块主页面
      * */
     @RequestMapping("/permission/toPermissionPage")
-    public String toPermissionPage(HttpSession session){
-        User user = (User) session.getAttribute(Const.LOGIN_USER);
-        if (user==null){
-            return "redirect:/login.htm";
-        }
+    public String toPermissionPage(){
         return "permission/permission";
     }
 
@@ -78,11 +71,7 @@ public class PermissionController {
      * 仅用于跳转许可添加页面
      * */
     @RequestMapping("/permission/toAddPage")
-    public String toAddPage(HttpSession session){
-        User user = (User) session.getAttribute(Const.LOGIN_USER);
-        if (user==null){
-            return "redirect:/login.htm";
-        }
+    public String toAddPage(){
         return "permission/add";
     }
 
@@ -105,11 +94,7 @@ public class PermissionController {
      * 跳转到修改页面，并回显数据
      * */
     @RequestMapping("/permission/toUpdatePage")
-    public String toUpdatePage(HttpSession session,Integer id,Map map){
-        User user = (User) session.getAttribute(Const.LOGIN_USER);
-        if (user==null){
-            return "redirect:/login.htm";
-        }
+    public String toUpdatePage(Integer id,Map map){
         Permission permission = permissionService.getPermissionById(id);
         map.put("permission",permission);
         return "permission/edit";
