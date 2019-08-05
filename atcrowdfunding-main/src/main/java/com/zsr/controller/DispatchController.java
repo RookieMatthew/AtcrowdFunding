@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Demo class
@@ -97,10 +95,13 @@ public class DispatchController {
             session.setAttribute(Const.LOGIN_USER,user);
             try {
                 List<Permission> userPermissionList = userService.queryPermissionByUserId(user.getId());
+                Set<String> allPermissionUrls = new HashSet<>();
                 Map<Integer,Permission> map = new HashMap<>(userPermissionList.size());
                 for (Permission permission : userPermissionList) {
                     map.put(permission.getId(),permission);
+                    allPermissionUrls.add(permission.getUrl());
                 }
+                session.setAttribute(Const.PERMISSION_URLS,allPermissionUrls);
                 Permission rootPermission = null;
                 for (Permission child : userPermissionList) {
                     if (child.getPid()==0){

@@ -49,4 +49,8 @@
     select permissionid
     from t_role_permission where roleid=#{roleid}
   </select>
+  <select id="getAllPermissionsUrl" resultType="string">
+    select url
+    from t_permission
+  </select>
 </mapper>

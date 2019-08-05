@@ -54,7 +54,9 @@
             </label>
         </div>
         <a class="btn btn-lg btn-success btn-block" onclick="dologin()" > 登录</a>
-        <h4 id="formTip"></h4>
+        <h4 id="formTip">
+            ${sessionScope.tip}
+        </h4>
     </form>
 </div>
 <script src="${APP_PATH}/jquery/jquery-2.1.1.min.js"></script>

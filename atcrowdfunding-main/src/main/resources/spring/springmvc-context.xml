@@ -57,5 +57,6 @@
     <!--访问控制拦截器-->
     <mvc:interceptors>
         <bean id="loginInterceptor" class="com.zsr.interceptor.LoginInterceptor"></bean>
+        <bean id="permissionInterceptor" class="com.zsr.interceptor.PermissionInterceptor"></bean>
     </mvc:interceptors>
 </beans>

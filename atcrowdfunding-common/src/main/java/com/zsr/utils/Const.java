@@ -10,4 +10,5 @@ public class Const {
 
     public static final String LOGIN_USER = "user";
     public static final String INIT_PSWD = "123";
+    public static final String PERMISSION_URLS = "urls";
 }

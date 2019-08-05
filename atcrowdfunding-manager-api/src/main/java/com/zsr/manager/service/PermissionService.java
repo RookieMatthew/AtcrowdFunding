@@ -3,6 +3,7 @@ package com.zsr.manager.service;
 import com.zsr.bean.Permission;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Demo class
@@ -57,4 +58,9 @@ public interface PermissionService {
      * @return 所有的已分配权限id
      * */
     List<Integer> getAssignedPermissionIdsByRoleId(Integer roleid);
+    /**
+     * 查找所有的权限的url地址
+     * @return 所有的权限的url地址
+     * */
+    Set<String> getAllPermissionsUrl();
 }
