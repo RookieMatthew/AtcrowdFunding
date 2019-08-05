@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <ul style="padding-left:0px;" class="list-group">
-    <li class="list-group-item tree-closed" >
+   <%-- <li class="list-group-item tree-closed" >
         <a href="${APP_PATH}/main.htm"><i class="glyphicon glyphicon-dashboard"></i> 控制面板</a>
     </li>
     <li class="list-group-item">
@@ -59,5 +60,31 @@
     </li>
     <li class="list-group-item tree-closed" >
         <a href="param.html"><i class="glyphicon glyphicon-list-alt"></i> 参数管理</a>
-    </li>
+    </li>--%>
+
+    <c:if test="${sessionScope.rootPermission.children!=null}">
+        <c:forEach items="${sessionScope.rootPermission.children}" var="child">
+            <li class="list-group-item tree-closed"  >
+                <span>
+                    <i class="${child.icon}"></i>
+                        <c:if test="${child.children.size()==0}">
+                            <a href="${APP_PATH}${child.url}">${child.name}</a>
+                        </c:if>
+                        <c:if test="${child.children.size()!=0}">
+                            ${child.name}
+                        </c:if>
+                    <span class="badge" style="float:right">${child.children.size()}</span>
+                </span>
+                <c:if test="${child.children!=null}">
+                    <ul style="margin-top:10px; display: none">
+                        <c:forEach items="${child.children}" var="innerPermission">
+                            <li style="height:30px;">
+                                <a href="${APP_PATH}${innerPermission.url}"><i class="${innerPermission.icon}"></i> ${innerPermission.name}</a>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </c:if>
+            </li>
+        </c:forEach>
+    </c:if>
 </ul>

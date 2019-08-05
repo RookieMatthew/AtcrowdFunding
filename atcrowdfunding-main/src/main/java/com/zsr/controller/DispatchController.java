@@ -1,5 +1,6 @@
 package com.zsr.controller;
 
+import com.zsr.bean.Permission;
 import com.zsr.bean.User;
 import com.zsr.manager.service.UserService;
 import com.zsr.utils.Const;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Demo class
@@ -96,10 +99,28 @@ public class DispatchController {
             paramMap.put("usertype",usertype);
             User user = userService.queryUserLogin(paramMap);
             session.setAttribute(Const.LOGIN_USER,user);
+            try {
+                List<Permission> userPermissionList = userService.queryPermissionByUserId(user.getId());
+                Map<Integer,Permission> map = new HashMap<>(userPermissionList.size());
+                for (Permission permission : userPermissionList) {
+                    map.put(permission.getId(),permission);
+                }
+                Permission rootPermission = null;
+                for (Permission child : userPermissionList) {
+                    if (child.getPid()==0){
+                        rootPermission = child;
+                    }else {
+                        map.get(child.getPid()).getChildren().add(child);
+                    }
+                }
+                session.setAttribute("rootPermission",rootPermission);
+                return AjaxMessage.success("登陆成功！");
+            }catch (Exception e){
+                return AjaxMessage.success("菜单加载失败！");
+            }
         }catch (Exception e){
             return AjaxMessage.fail("登陆失败！");
         }
-        return AjaxMessage.success("登陆成功！");
     }
 
     @ResponseBody

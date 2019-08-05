@@ -1,5 +1,6 @@
 package com.zsr.manager.dao;
 
+import com.zsr.bean.Permission;
 import com.zsr.bean.Role;
 import com.zsr.bean.User;
 import com.zsr.utils.VO;
@@ -34,4 +35,6 @@ public interface UserMapper {
     int assignRoleToUser(@Param("userId") String userId, @Param("vo") VO vo);
 
     int removeRoleToUser(@Param("userId")String userId, @Param("vo") VO vo);
+
+    List<Permission> queryPermissionByUserId(Integer id);
 }

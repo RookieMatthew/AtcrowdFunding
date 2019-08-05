@@ -1,5 +1,6 @@
 package com.zsr.manager.service;
 
+import com.zsr.bean.Permission;
 import com.zsr.bean.Role;
 import com.zsr.bean.User;
 import com.zsr.utils.VO;
@@ -91,4 +92,11 @@ public interface UserService {
      * @return 影响数据库条数
      * */
     int removeRoleToUser(String userId, VO vo);
+
+    /**
+     * 通过用户id得到用户拥有的许可
+     * @param id 用户id
+     * @return 许可集合
+     * */
+    List<Permission> queryPermissionByUserId(Integer id);
 }

@@ -1,5 +1,6 @@
 package com.zsr.manager.service.impl;
 
+import com.zsr.bean.Permission;
 import com.zsr.bean.Role;
 import com.zsr.bean.User;
 import com.zsr.exception.LoginFailException;
@@ -103,5 +104,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public int removeRoleToUser(String userId, VO vo) {
         return userMapper.removeRoleToUser(userId,vo);
+    }
+
+    @Override
+    public List<Permission> queryPermissionByUserId(Integer id) {
+        return userMapper.queryPermissionByUserId(id);
     }
 }
