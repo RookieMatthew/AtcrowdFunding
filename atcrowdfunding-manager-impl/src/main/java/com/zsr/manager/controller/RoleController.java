@@ -3,9 +3,7 @@ package com.zsr.manager.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zsr.bean.Role;
-import com.zsr.bean.User;
 import com.zsr.manager.service.RoleService;
-import com.zsr.utils.Const;
 import com.zsr.utils.AjaxMessage;
 import com.zsr.utils.VO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**

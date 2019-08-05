@@ -22,10 +22,7 @@
   <update id="updateByPrimaryKey" parameterType="com.zsr.bean.Advertisement">
     update t_advertisement
     set name = #{name,jdbcType=VARCHAR},
-      iconpath = #{iconpath,jdbcType=VARCHAR},
-      status = #{status,jdbcType=CHAR},
-      url = #{url,jdbcType=VARCHAR},
-      userid = #{userid,jdbcType=INTEGER}
+        url = #{url,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -35,6 +32,20 @@
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, name, iconpath, status, url, userid
-    from t_advertisement
+    from t_advertisement order by id desc
   </select>
+
+  <select id="getAdvertisementsByNameLike" resultMap="BaseResultMap">
+    select id, name, iconpath, status, url, userid
+    from t_advertisement
+    where name like concat('%',#{_parameter},'%')
+  </select>
+
+  <delete id="deleteAdvertisements">
+    delete from t_advertisement
+    where id in
+    <foreach collection="vo.ids" item="id" separator="," open="(" close=")" >
+      #{id}
+    </foreach>
+  </delete>
 </mapper>
