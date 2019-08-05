@@ -24,7 +24,7 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String servletPath = request.getServletPath();
         Set<String> urls = (Set<String>) request.getSession().getAttribute(Const.PERMISSION_URLS);
-        Set<String> allPermissionsUrl = permissionService.getAllPermissionsUrl();
+        Set<String> allPermissionsUrl = (Set<String>) request.getSession().getServletContext().getAttribute(Const.ALL_PERMISSION_URLS);
         if (!allPermissionsUrl.contains(servletPath)){
             return true;
         }
