@@ -5,14 +5,20 @@ import com.github.pagehelper.PageInfo;
 import com.zsr.utils.AjaxMessage;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletInputStream;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -115,6 +121,7 @@ public class ProcessController {
         try {
             MultipartHttpServletRequest mulRequest = (MultipartHttpServletRequest)request;
             MultipartFile uploadFile = mulRequest.getFile("uploadFile");
+            ImageIO.setUseCache(false);
             repositoryService.createDeployment()
                     .addInputStream(uploadFile.getOriginalFilename(),uploadFile.getInputStream())
             .deploy();
@@ -130,7 +137,7 @@ public class ProcessController {
      */
     @RequestMapping(value = "/process/{id}",method = RequestMethod.DELETE)
     @ResponseBody
-    public AjaxMessage userList(@PathVariable("id") String id) {
+    public AjaxMessage deleteProcess(@PathVariable("id") String id) {
         try {
             ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
                     .processDefinitionId(id).singleResult();
@@ -140,5 +147,33 @@ public class ProcessController {
             e.printStackTrace();
             return AjaxMessage.fail("流程定义删除失败！");
         }
+    }
+
+    /**
+     * 跳转到流程图片显现页面
+     */
+    @RequestMapping(value = "/process/toShowImgPage")
+    public String toShowImgPage() {
+        return "process/show";
+    }
+
+
+    /**
+     * 跳转到流程图片显现页面
+     */
+    @RequestMapping(value = "/process/showImg")
+    public void showImg(HttpServletResponse response,String id) {
+        try {
+            ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+                    .processDefinitionId(id).singleResult();
+            InputStream inputStream = repositoryService.getResourceAsStream(processDefinition.getDeploymentId(),
+                    processDefinition.getDiagramResourceName());
+            System.out.println(inputStream.available());
+            ServletOutputStream outputStream = response.getOutputStream();
+            IOUtils.copy(inputStream,outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

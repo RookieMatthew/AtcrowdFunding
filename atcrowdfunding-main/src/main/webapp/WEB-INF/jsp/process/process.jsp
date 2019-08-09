@@ -170,7 +170,7 @@
             ListHtml+='<td>'+n.version+'</td>';
             ListHtml+='<td>'+n.key+'</td>';
             ListHtml+='<td>';
-            ListHtml+='<button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-eye-open"></i></button>';
+            ListHtml+='<button onclick="window.location.href=\''+'${APP_PATH}/process/toShowImgPage.htm?id='+n.id+'\'" type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-eye-open"></i></button>';
             ListHtml+=' <button onclick="doDelete(\''+n.id+'\',\''+n.name+'\')" type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
             ListHtml+='</td>';
             ListHtml+='</tr>';
