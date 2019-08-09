@@ -7,10 +7,7 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -125,6 +122,23 @@ public class ProcessController {
         } catch (Exception e) {
             e.printStackTrace();
             return AjaxMessage.fail("流程定义部署失败！");
+        }
+    }
+
+    /**
+     * 删除流程定义
+     */
+    @RequestMapping(value = "/process/{id}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public AjaxMessage userList(@PathVariable("id") String id) {
+        try {
+            ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+                    .processDefinitionId(id).singleResult();
+            repositoryService.deleteDeployment(processDefinition.getDeploymentId(),true);
+            return AjaxMessage.success("流程定义删除成功！");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AjaxMessage.fail("流程定义删除失败！");
         }
     }
 }

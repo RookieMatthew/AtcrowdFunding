@@ -171,7 +171,7 @@
             ListHtml+='<td>'+n.key+'</td>';
             ListHtml+='<td>';
             ListHtml+='<button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-eye-open"></i></button>';
-            ListHtml+=' <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
+            ListHtml+=' <button onclick="doDelete(\''+n.id+'\',\''+n.name+'\')" type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
             ListHtml+='</td>';
             ListHtml+='</tr>';
         });
@@ -238,6 +238,38 @@
         return ;
     });
 
+    //删除流程定义
+    function doDelete(id,name) {
+        var listLoading;
+        layer.confirm("确认删除流程定义【"+name+"】吗？",  {icon: 3, title:'提示'}, function(cindex){
+            layer.close(cindex);
+            $.ajax({
+                url:"${APP_PATH}/process/"+id+".do",
+                data:{
+                    "_method":"delete"
+                },
+                type:"post",
+                beforeSend:function(){
+                    listLoading = layer.load(2, {time: 10*1000});
+                    return true;
+                },
+                success:function (result) {
+                    layer.close(listLoading);
+                    if (result.code==100){
+                        layer.msg(result.message, {time:1500, icon:1, shift:6});
+                        $(loadUser(1,""));
+                    } else{
+                        layer.msg(result.message,{icon:0,shift:6});
+                    }
+                },
+                error:function () {
+                    layer.msg("请求错误！",{icon:0,shift:6});
+                }
+            });
+        }, function(cindex){
+            layer.close(cindex);
+        });
+    }
 </script>
 </body>
 </html>
