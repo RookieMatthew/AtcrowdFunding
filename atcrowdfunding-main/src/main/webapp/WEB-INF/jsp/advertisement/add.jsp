@@ -132,7 +132,7 @@
             var options = {
                 url:"${APP_PATH}/advertisement.do",
                 beforeSubmit : function(){
-                    loadingIndex = layer.msg('数据正在保存中', {icon: 6});
+                    loadingIndex = layer.msg('数据正在保存中', {icon: 16});
                     return true ; //必须返回true,否则,请求终止.
                 },
                 success : function(result){
