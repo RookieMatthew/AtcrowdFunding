@@ -26,7 +26,7 @@
 
 <div class="container">
     <form action="${APP_PATH}/doLogin.do" method="post" id="loginForm" class="form-signin" role="form">
-        <h2 class="form-signin-heading"><i class="glyphicon glyphicon-log-in"></i> 用户登录</h2>
+        <h2 class="form-signin-heading"><i class="glyphicon glyphicon-log-in"></i>用户登录</h2>
         <div class="form-group has-success has-feedback">
             <input name="loginacct" type="text" class="form-control" id="floginacct" value="laowang" placeholder="请输入登录账号" autofocus>
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
@@ -43,7 +43,7 @@
         </div>
         <div class="checkbox">
             <label>
-                <input type="checkbox" value="remember-me"> 记住我
+                <input type="checkbox" id="remember" value="remember-me"> 记住我
             </label>
             <br>
             <label>
@@ -73,6 +73,7 @@
         var loginacct = $("#floginacct");
         var userpswd = $("#fuserpswd");
         var usertype = $("#fusertype");
+        var remember = $("#remember")[0].checked;
 
         if ($.trim(loginacct.val())==""){
             // $("#formTip").text("用户名不能为空，请重新输入！");
@@ -97,7 +98,8 @@
             data:{
                 "loginacct":loginacct.val(),
                 "userpswd":userpswd.val(),
-                "usertype":usertype.val()
+                "usertype":usertype.val(),
+                "remember":remember?"1":"0"
             },
             type:"post",
             beforeSend:function () {
