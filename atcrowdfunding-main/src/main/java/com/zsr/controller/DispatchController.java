@@ -1,8 +1,10 @@
 package com.zsr.controller;
 
+import com.zsr.bean.Member;
 import com.zsr.bean.Permission;
 import com.zsr.bean.User;
 import com.zsr.manager.service.UserService;
+import com.zsr.potal.service.MemberService;
 import com.zsr.utils.Const;
 import com.zsr.utils.MD5Util;
 import com.zsr.utils.AjaxMessage;
@@ -25,6 +27,9 @@ public class DispatchController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MemberService memberService;
 
     /**
      * 跳转到首页，index.jsp
@@ -60,7 +65,7 @@ public class DispatchController {
     }
 
     /**
-     * 登陆成功跳转到管理主页面，main.jsp
+     * 管理员登陆成功跳转到管理主页面，main.jsp
      */
     @RequestMapping("/main")
     public String toMainHtml(){
@@ -68,18 +73,13 @@ public class DispatchController {
     }
 
     /**
-     * 进行后台用户（管理员）登录操作，同步登陆
+     * 会员登陆成功跳转到会员主页面，member.jsp
      */
-    /*@RequestMapping("/doLogin")
-    public String doLogin(String loginacct, String userpswd, String usertype, HttpSession session){
-        HashMap<String, Object> paramMap = new HashMap<>();
-        paramMap.put("loginacct",loginacct);
-        paramMap.put("userpswd",userpswd);
-        paramMap.put("usertype",usertype);
-        User user = userService.queryUserLogin(paramMap);
-        session.setAttribute(Const.LOGIN_USER,user);
-        return "redirect:/main.htm";
-    }*/
+    @RequestMapping("/member/member")
+    public String toMemberHtml(){
+        return "member/member";
+    }
+
     /**
      * 进行后台用户（管理员）登录操作，异步登陆
      */
@@ -91,29 +91,37 @@ public class DispatchController {
             paramMap.put("loginacct",loginacct);
             paramMap.put("userpswd", MD5Util.digest(userpswd));
             paramMap.put("usertype",usertype);
-            User user = userService.queryUserLogin(paramMap);
-            session.setAttribute(Const.LOGIN_USER,user);
-            try {
-                List<Permission> userPermissionList = userService.queryPermissionByUserId(user.getId());
-                Set<String> allPermissionUrls = new HashSet<>();
-                Map<Integer,Permission> map = new HashMap<>(userPermissionList.size());
-                for (Permission permission : userPermissionList) {
-                    map.put(permission.getId(),permission);
-                    allPermissionUrls.add(permission.getUrl());
-                }
-                session.setAttribute(Const.PERMISSION_URLS,allPermissionUrls);
-                Permission rootPermission = null;
-                for (Permission child : userPermissionList) {
-                    if (child.getPid()==0){
-                        rootPermission = child;
-                    }else {
-                        map.get(child.getPid()).getChildren().add(child);
+            if("user".equals(usertype)){
+                User user = userService.queryUserLogin(paramMap);
+                session.setAttribute(Const.LOGIN_USER,user);
+                try {
+                    List<Permission> userPermissionList = userService.queryPermissionByUserId(user.getId());
+                    Set<String> allPermissionUrls = new HashSet<>();
+                    Map<Integer,Permission> map = new HashMap<>(userPermissionList.size());
+                    for (Permission permission : userPermissionList) {
+                        map.put(permission.getId(),permission);
+                        allPermissionUrls.add(permission.getUrl());
                     }
+                    session.setAttribute(Const.PERMISSION_URLS,allPermissionUrls);
+                    Permission rootPermission = null;
+                    for (Permission child : userPermissionList) {
+                        if (child.getPid()==0){
+                            rootPermission = child;
+                        }else {
+                            map.get(child.getPid()).getChildren().add(child);
+                        }
+                    }
+                    session.setAttribute("rootPermission",rootPermission);
+                    return AjaxMessage.success("登陆成功！").addInfo("usertype",usertype);
+                }catch (Exception e){
+                    return AjaxMessage.success("菜单加载失败！");
                 }
-                session.setAttribute("rootPermission",rootPermission);
-                return AjaxMessage.success("登陆成功！");
-            }catch (Exception e){
-                return AjaxMessage.success("菜单加载失败！");
+            }else if("member".equals(usertype)){
+                Member member = memberService.queryMemberLogin(paramMap);
+                session.setAttribute(Const.LOGIN_MEMBER,member);
+                return AjaxMessage.success("登陆成功！").addInfo("usertype",usertype);
+            }else {
+                return AjaxMessage.fail("用户类型不合法！");
             }
         }catch (Exception e){
             return AjaxMessage.fail("登陆失败！");

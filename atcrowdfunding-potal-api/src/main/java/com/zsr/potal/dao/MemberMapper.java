@@ -1,6 +1,8 @@
-package com.zsr.manager.dao;
+package com.zsr.potal.dao;
 
 import com.zsr.bean.Member;
+
+import java.util.HashMap;
 import java.util.List;
 
 public interface MemberMapper {
@@ -13,4 +15,6 @@ public interface MemberMapper {
     List<Member> selectAll();
 
     int updateByPrimaryKey(Member record);
+
+    Member queryMemberLogin(HashMap<String, Object> paramMap);
 }

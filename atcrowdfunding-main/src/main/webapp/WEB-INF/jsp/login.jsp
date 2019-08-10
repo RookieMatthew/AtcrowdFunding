@@ -28,7 +28,7 @@
     <form action="${APP_PATH}/doLogin.do" method="post" id="loginForm" class="form-signin" role="form">
         <h2 class="form-signin-heading"><i class="glyphicon glyphicon-log-in"></i> 用户登录</h2>
         <div class="form-group has-success has-feedback">
-            <input name="loginacct" type="text" class="form-control" id="floginacct" value="zhangshouren" placeholder="请输入登录账号" autofocus>
+            <input name="loginacct" type="text" class="form-control" id="floginacct" value="laowang" placeholder="请输入登录账号" autofocus>
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-success has-feedback">
@@ -108,14 +108,18 @@
             success:function (result) {
                 layer.close(loadingIndex);
                 if (result.code==100) {
-                    window.location.href="${APP_PATH}/main.htm";
+                    if (result.info.usertype=='user'){
+                        window.location.href="${APP_PATH}/main.htm";
+                    }else if (result.info.usertype=='member'){
+                        window.location.href="${APP_PATH}/member/member.htm";
+                    }else {
+                        layer.msg("登录发生错误！",{icon:5,shift:6});
+                    }
                 }else {
-                    // $("#formTip").text("用户名或密码错误！");
                     layer.msg("用户名或密码错误！",{icon:5,shift:6});
                 }
             },
             error:function () {
-              // alert("error");
                 layer.msg("请求错误！",{icon:0,shift:6});
             }
         });

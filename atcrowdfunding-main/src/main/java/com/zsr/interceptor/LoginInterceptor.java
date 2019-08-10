@@ -1,5 +1,6 @@
 package com.zsr.interceptor;
 
+import com.zsr.bean.Member;
 import com.zsr.bean.User;
 import com.zsr.utils.Const;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -33,7 +34,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(Const.LOGIN_USER);
-        if(user!=null){
+        Member member = (Member) session.getAttribute(Const.LOGIN_MEMBER);
+        if(user!=null || member!=null){
             return true;
         }else {
             response.sendRedirect(request.getContextPath()+"/login.htm");
