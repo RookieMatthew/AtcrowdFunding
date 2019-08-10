@@ -13,4 +13,8 @@ public interface CertMapper {
     List<Cert> selectAll();
 
     int updateByPrimaryKey(Cert record);
+
+    List<Cert> getCertsByNameLike(String selectCondition);
+
+    void deleteBatchCert(String[] ids);
 }

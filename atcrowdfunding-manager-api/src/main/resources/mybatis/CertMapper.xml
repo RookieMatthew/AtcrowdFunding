@@ -27,4 +27,11 @@
     select id, name
     from t_cert
   </select>
+
+  <select id="getCertsByNameLike" resultMap="BaseResultMap">
+    select id, name
+    from t_cert
+    WHERE name like concat('%',#{selectCondition},'%')
+  </select>
+
 </mapper>
