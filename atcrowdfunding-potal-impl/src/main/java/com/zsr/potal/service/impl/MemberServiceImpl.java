@@ -24,4 +24,10 @@ public class MemberServiceImpl implements MemberService {
     public Member queryMemberLogin(HashMap<String, Object> paramMap) {
         return memberMapper.queryMemberLogin(paramMap);
     }
+
+    @Override
+    public int updateAcctType(Member member) {
+        return memberMapper.updateByPrimaryKey(member);
+    }
 }
+

@@ -14,4 +14,5 @@ public interface MemberService {
 
     Member queryMemberLogin(HashMap<String, Object> paramMap);
 
+    int updateAcctType(Member member);
 }
