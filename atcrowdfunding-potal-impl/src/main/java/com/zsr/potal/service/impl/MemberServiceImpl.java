@@ -27,7 +27,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public int updateAcctType(Member member) {
-        return memberMapper.updateByPrimaryKey(member);
+        return memberMapper.updateAcctType(member);
+    }
+
+    @Override
+    public int updateBaseInfo(Member member) {
+        return memberMapper.updateBaseInfo(member);
     }
 }
 

@@ -17,4 +17,8 @@ public interface MemberMapper {
     int updateByPrimaryKey(Member record);
 
     Member queryMemberLogin(HashMap<String, Object> paramMap);
+
+    int updateAcctType(Member member);
+
+    int updateBaseInfo(Member member);
 }

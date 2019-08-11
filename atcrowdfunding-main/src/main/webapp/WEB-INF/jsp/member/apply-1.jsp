@@ -1,9 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="GB18030">
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -53,27 +52,21 @@
     </div>
 
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#"><span class="badge">1</span> 基本信息</a></li>
-        <li role="presentation"><a href="#"><span class="badge">2</span> 资质文件上传</a></li>
+        <li role="presentation" ><a href="#"><span class="badge">1</span> 基本信息</a></li>
+        <li role="presentation" class="active"><a href="#"><span class="badge">2</span> 资质文件上传</a></li>
         <li role="presentation"><a href="#"><span class="badge">3</span> 邮箱确认</a></li>
         <li role="presentation"><a href="#"><span class="badge">4</span> 申请确认</a></li>
     </ul>
 
     <form role="form" style="margin-top:20px;">
         <div class="form-group">
-            <label for="realname">真实名称</label>
-            <input type="text" class="form-control" id="realname" placeholder="请输入真实名称">
+            <label for="exampleInputEmail1">手执身份证照片</label>
+            <input type="file" class="form-control" >
+            <br>
+            <img src="${APP_PATH}/img/pic.jpg">
         </div>
-        <div class="form-group">
-            <label for="cardnum">身份证号码</label>
-            <input type="text" class="form-control" id="cardnum" placeholder="请输入身份证号码">
-        </div>
-        <div class="form-group">
-            <label for="phone">电话号码</label>
-            <input type="text" class="form-control" id="phone" placeholder="请输入电话号码">
-        </div>
-        <button type="button" onclick="window.location.href='${APP_PATH}/member/toAccttypePage.htm'" class="btn btn-default">上一步</button>
-        <button type="button" id="updateBaseInfoBtn"  class="btn btn-success">下一步</button>
+        <button type="button" onclick="window.location.href='${APP_PATH}/member/toApplyPage.htm'" class="btn btn-default">上一步</button>
+        <button type="button" onclick="window.location.href='apply-2.html'"  class="btn btn-success">下一步</button>
     </form>
     <hr>
 </div> <!-- /container -->
@@ -95,46 +88,10 @@
 <script src="${APP_PATH}/jquery/jquery-2.1.1.min.js"></script>
 <script src="${APP_PATH}/bootstrap/js/bootstrap.min.js"></script>
 <script src="${APP_PATH}/script/docs.min.js"></script>
-<script src="${APP_PATH}/jquery/layer/layer.js"></script>
 <script>
     $('#myTab a').click(function (e) {
         e.preventDefault()
         $(this).tab('show')
-    });
-
-    $("#updateBaseInfoBtn").click(function () {
-        var realname = $("#realname").val();
-        var cardnum = $("#cardnum").val();
-        var phone = $("#phone").val();
-        if (realname==null||cardnum==null||phone==null||realname.trim()==""||cardnum.trim()==""||phone.trim()==""){
-            layer.msg("请正确填写信息！", {time:1500, icon:0, shift:6});
-        }else {
-            $.ajax({
-                url:"${APP_PATH}/member/updateBaseInfo.do",
-                data:{
-                    "realname":realname,
-                    "cardnum":cardnum,
-                    "phone":phone
-                },
-                type:"post",
-                beforeSend:function(){
-                    listLoading = layer.load(2, {time: 10*1000});
-                    return true;
-                },
-                success:function (result) {
-                    layer.close(listLoading);
-                    if (result.code==100){
-                        layer.msg(result.message, {time:1500, icon:1, shift:6});
-                        window.location.href="${APP_PATH}/member/toApply1Page.htm";
-                    } else{
-                        layer.msg(result.message,{icon:0,shift:6});
-                    }
-                },
-                error:function () {
-                    layer.msg("请求错误！",{icon:0,shift:6});
-                }
-            });
-        }
     });
 </script>
 </body>

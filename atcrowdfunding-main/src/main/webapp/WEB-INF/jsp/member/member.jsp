@@ -95,7 +95,7 @@
                                     <span class="label label-success" style="cursor:pointer;">已实名认证</span>
                                 </c:when>
                                 <c:otherwise>
-                                    <span class="label label-danger" style="cursor:pointer;" onclick="window.location.href='${APP_PATH}/member/toAccttypePage.htm'">未实名认证</span>
+                                    <span class="label label-danger" style="cursor:pointer;" onclick="window.location.href='${APP_PATH}/member/choseApply.htm'">未实名认证</span>
                                 </c:otherwise>
                             </c:choose>
 
