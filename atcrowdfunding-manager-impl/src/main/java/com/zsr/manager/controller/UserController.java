@@ -173,7 +173,6 @@ public class UserController {
     @RequestMapping(value = "/user/removeRoleToUser/{userId}",method = RequestMethod.DELETE)
     @ResponseBody
     public AjaxMessage removeRoleToUser(@PathVariable String userId, VO vo){
-        System.out.println(vo.ids);
         System.out.println(userId);
         try {
             userService.removeRoleToUser(userId,vo);

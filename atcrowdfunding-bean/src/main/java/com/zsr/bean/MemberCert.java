@@ -1,5 +1,7 @@
 package com.zsr.bean;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class MemberCert {
     private Integer id;
 
@@ -8,6 +10,16 @@ public class MemberCert {
     private Integer certid;
 
     private String iconpath;
+
+    private MultipartFile fileimg;
+
+    public MultipartFile getFileimg() {
+        return fileimg;
+    }
+
+    public void setFileimg(MultipartFile fileimg) {
+        this.fileimg = fileimg;
+    }
 
     public Integer getId() {
         return id;

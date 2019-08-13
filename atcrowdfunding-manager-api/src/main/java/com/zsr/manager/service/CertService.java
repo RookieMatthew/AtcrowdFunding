@@ -1,6 +1,7 @@
 package com.zsr.manager.service;
 
 import com.zsr.bean.Cert;
+import com.zsr.bean.MemberCert;
 
 import java.util.List;
 
@@ -25,4 +26,8 @@ public interface CertService {
     Cert getCertById(Integer id);
 
     void updateCert(Cert cert);
+
+    List<Cert> getCertsByAccttype(String accttype);
+
+    int saveMemberCertImg(List<MemberCert> certimgs);
 }

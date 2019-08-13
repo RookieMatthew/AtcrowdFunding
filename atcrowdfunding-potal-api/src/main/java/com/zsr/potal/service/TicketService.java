@@ -13,5 +13,7 @@ public interface TicketService {
 
     int addTicket(Ticket ticket);
 
-    int updatePstep(Integer memberid, String pstep);
+    int updatePstep(Ticket ticket);
+
+    int updatePstepAndPiidAndAuthcode(Ticket ticket);
 }

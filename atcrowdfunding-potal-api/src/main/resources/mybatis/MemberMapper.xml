@@ -77,4 +77,18 @@
       phone = #{phone,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <update id="updateEmail" parameterType="com.zsr.bean.Member">
+    update t_member
+    set
+     email = #{email,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateAuthstatus" parameterType="com.zsr.bean.Member">
+    update t_member
+    set
+     authstatus = #{authstatus,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>

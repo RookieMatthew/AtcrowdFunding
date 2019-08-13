@@ -21,5 +21,7 @@ public interface TicketMapper {
 
     int addTicket(Ticket ticket);
 
-    int updatePstep(@Param("memberid") Integer memberid,@Param("pstep") String pstep);
+    int updatePstep(Ticket ticket);
+
+    int updatePstepAndPiidAndAuthcode(Ticket ticket);
 }

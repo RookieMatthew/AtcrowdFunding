@@ -28,8 +28,14 @@ public class TicketServiceImpl implements TicketService {
         return ticketMapper.addTicket(ticket);
     }
 
+
     @Override
-    public int updatePstep(Integer memberid, String pstep) {
-        return ticketMapper.updatePstep(memberid,pstep);
+    public int updatePstep(Ticket ticket) {
+        return ticketMapper.updatePstep(ticket);
+    }
+
+    @Override
+    public int updatePstepAndPiidAndAuthcode(Ticket ticket) {
+        return ticketMapper.updatePstepAndPiidAndAuthcode(ticket);
     }
 }

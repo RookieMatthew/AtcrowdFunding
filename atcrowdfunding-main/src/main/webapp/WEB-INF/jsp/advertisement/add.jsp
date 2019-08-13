@@ -128,7 +128,7 @@
     });
     $(function(){
         $("#saveBtn").click(function(){
-
+            var loadingIndex = -1;
             var options = {
                 url:"${APP_PATH}/advertisement.do",
                 beforeSubmit : function(){

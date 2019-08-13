@@ -1,6 +1,7 @@
 package com.zsr.manager.service.impl;
 
 import com.zsr.bean.Cert;
+import com.zsr.bean.MemberCert;
 import com.zsr.manager.dao.CertMapper;
 import com.zsr.manager.service.CertService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +56,15 @@ public class CertServiceImpl implements CertService {
     @Override
     public void updateCert(Cert cert) {
         certMapper.updateByPrimaryKey(cert);
+    }
+
+    @Override
+    public List<Cert> getCertsByAccttype(String accttype) {
+        return certMapper.getCertsByAccttype(accttype);
+    }
+
+    @Override
+    public int saveMemberCertImg(List<MemberCert> certimgs) {
+        return certMapper.saveMemberCertImg(certimgs);
     }
 }

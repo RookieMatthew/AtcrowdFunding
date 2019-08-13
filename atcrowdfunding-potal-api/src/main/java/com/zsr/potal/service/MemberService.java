@@ -17,4 +17,8 @@ public interface MemberService {
     int updateAcctType(Member member);
 
     int updateBaseInfo(Member member);
+
+    int updateEmail(Member member);
+
+    int updateAuthstatus(Member member);
 }

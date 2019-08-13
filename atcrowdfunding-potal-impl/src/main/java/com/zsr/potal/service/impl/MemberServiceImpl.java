@@ -34,5 +34,15 @@ public class MemberServiceImpl implements MemberService {
     public int updateBaseInfo(Member member) {
         return memberMapper.updateBaseInfo(member);
     }
+
+    @Override
+    public int updateEmail(Member member) {
+        return memberMapper.updateEmail(member);
+    }
+
+    @Override
+    public int updateAuthstatus(Member member) {
+        return memberMapper.updateAuthstatus(member);
+    }
 }
 

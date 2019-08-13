@@ -292,8 +292,11 @@ public class ActivitiTest {
         //部署流程定义
         processEngine.getRepositoryService().createDeployment().addClasspathResource("email.bpmn").deploy();
         //启动流程实例
+        HashMap<String, Object> ss = new HashMap<>();
+        ss.put("email","test@zsr.com");
+        ss.put("authcode","1235");
         ProcessDefinition processDefinition = processEngine.getRepositoryService().createProcessDefinitionQuery().latestVersion().singleResult();
-        processEngine.getRuntimeService().startProcessInstanceById(processDefinition.getId());
+        processEngine.getRuntimeService().startProcessInstanceById(processDefinition.getId(),ss);
     }
 
     //任务流程监听器

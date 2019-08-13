@@ -34,4 +34,15 @@
     WHERE name like concat('%',#{selectCondition},'%')
   </select>
 
+  <select id="getCertsByAccttype" resultMap="BaseResultMap">
+    SELECT id, name from t_cert
+      where id in (SELECT certid from t_account_type_cert WHERE accttype = #{accttype})
+  </select>
+
+  <insert id="saveMemberCertImg">
+    <foreach collection="certimgs" item="certimg" separator=";">
+      insert into t_member_cert(memberid,certid,iconpath)
+      values (#{certimg.memberid},#{certimg.certid},#{certimg.iconpath})
+    </foreach>
+  </insert>
 </mapper>

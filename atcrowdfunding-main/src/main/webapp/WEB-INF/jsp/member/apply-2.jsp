@@ -1,4 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -54,23 +53,18 @@
 
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" ><a href="#"><span class="badge">1</span> 基本信息</a></li>
-        <li role="presentation" class="active"><a href="#"><span class="badge">2</span> 资质文件上传</a></li>
-        <li role="presentation"><a href="#"><span class="badge">3</span> 邮箱确认</a></li>
+        <li role="presentation" ><a href="#"><span class="badge">2</span> 资质文件上传</a></li>
+        <li role="presentation" class="active"><a href="#"><span class="badge">3</span> 邮箱确认</a></li>
         <li role="presentation"><a href="#"><span class="badge">4</span> 申请确认</a></li>
     </ul>
 
-    <form id="uploadCertImgForm" role="form" enctype="multipart/form-data" method="post" style="margin-top:20px;">
-        <c:forEach items="${needCerts}" var="cert" varStatus="status">
-            <div class="form-group">
-                <label>${cert.name}</label>
-                <input name="certimgs[${status.index}].certid" value="${cert.id}" hidden>
-                <input type="file" name="certimgs[${status.index}].fileimg" class="form-control" >
-                <br>
-                <img src="${APP_PATH}/img/pic.jpg" style="display: none">
-            </div>
-        </c:forEach>
-        <button type="button" onclick="window.location.href='${APP_PATH}/member/toApplyPage.htm'" class="btn btn-default">上一步</button>
-        <button type="button" id="uploadCertImgBtn" class="btn btn-success">下一步</button>
+    <form role="form" style="margin-top:20px;">
+        <div class="form-group">
+            <label for="memberEmail">邮箱地址</label>
+            <input type="text" class="form-control" value="${sessionScope.member.email}" id="memberEmail" placeholder="请输入用于接收验证码的邮箱地址">
+        </div>
+        <button type="button" onclick="window.location.href='${APP_PATH}/member/toApply1Page.htm'" class="btn btn-default">上一步</button>
+        <button type="button" id="checkEmailBtn"  class="btn btn-success">下一步</button>
     </form>
     <hr>
 </div> <!-- /container -->
@@ -82,7 +76,7 @@
                     <a rel="nofollow" href="http://www.atguigu.com">关于我们</a> | <a rel="nofollow" href="http://www.atguigu.com">服务条款</a> | <a rel="nofollow" href="http://www.atguigu.com">免责声明</a> | <a rel="nofollow" href="http://www.atguigu.com">网站地图</a> | <a rel="nofollow" href="http://www.atguigu.com">联系我们</a>
                 </div>
                 <div class="copyRight">
-                    Copyright ?2017-2017 atguigu.com 版权所有
+                    Copyright ?2017-2017atguigu.com 版权所有
                 </div>
             </div>
 
@@ -92,50 +86,39 @@
 <script src="${APP_PATH}/jquery/jquery-2.1.1.min.js"></script>
 <script src="${APP_PATH}/bootstrap/js/bootstrap.min.js"></script>
 <script src="${APP_PATH}/script/docs.min.js"></script>
-<script src="${APP_PATH }/jquery/layer/layer.js"></script>
-<script src="${APP_PATH }/jquery/jquery-form/jquery-form.min.js"></script>
+<script src="${APP_PATH}/jquery/layer/layer.js"></script>
 <script>
     $('#myTab a').click(function (e) {
         e.preventDefault()
         $(this).tab('show')
     });
 
-    $(":file").change(function (event) {
-        var files = event.target.files;
-        var file;
-        if (files.length>0) {
-            file = files[0];
 
-            var URL = window.URL || window.webkitURL;
-
-            var imgURL = URL.createObjectURL(file);
-            var imgObj = $(this).next().next();
-            imgObj.attr("src",imgURL);
-            imgObj.show();
-        }
-    });
-
-    $(function(){
-        $("#uploadCertImgBtn").click(function () {
-            var loadingIndex = -1;
-            var options = {
-                url:"${APP_PATH}/member/uploadCertImg.do",
-                beforeSubmit : function(){
-                    loadingIndex = layer.msg('资质图片上传中！', {icon: 16});
-                    return true ; //必须返回true,否则,请求终止.
-                },
-                success : function(result){
-                    layer.close(loadingIndex);
-                    if(result.code==100){
-                        layer.msg(result.message, {time:1000, icon:6});
-                        window.location.href="${APP_PATH}/member/toApply2Page.htm";
-                    }else{
-                        layer.msg(result.message, {time:1000, icon:5, shift:6});
-                    }
+    $("#checkEmailBtn").click(function () {
+       var memberEmail = $("#memberEmail").val()
+       var listLoading = -1;
+        $.ajax({
+            url:"${APP_PATH}/member/checkEmail.do",
+            data:{
+                "email":memberEmail
+            },
+            type:"post",
+            beforeSend:function(){
+                listLoading = layer.load(2, {time: 10*1000});
+                return true;
+            },
+            success:function (result) {
+                layer.close(listLoading);
+                if (result.code==100){
+                    layer.msg(result.message, {time:1500, icon:1, shift:6});
+                    window.location.href="${APP_PATH}/member/toApply3Page.htm";
+                } else{
+                    layer.msg(result.message,{icon:0,shift:6});
                 }
-            };
-            $("#uploadCertImgForm").ajaxSubmit(options); //异步提交
-            return ;
+            },
+            error:function () {
+                layer.msg("请求错误！",{icon:0,shift:6});
+            }
         });
     });
 </script>

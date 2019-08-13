@@ -50,10 +50,19 @@
       #{status,jdbcType=CHAR},#{pstep,jdbcType=VARCHAR})
   </insert>
 
-  <update id="updatePstep">
+  <update id="updatePstep"  parameterType="com.zsr.bean.Member">
     update t_ticket
     set
-      pstep = #{pstep}
-    where memberid = #{memberid} and status = '0'
+      pstep = #{pstep,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}  and status = '0'
+  </update>
+
+  <update id="updatePstepAndPiidAndAuthcode"  parameterType="com.zsr.bean.Member">
+   update t_ticket
+    set
+      piid = #{piid,jdbcType=VARCHAR},
+      authcode = #{authcode,jdbcType=CHAR},
+      pstep = #{pstep,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}  and status = '0'
   </update>
 </mapper>
